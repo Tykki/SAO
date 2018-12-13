@@ -1,0 +1,73 @@
+import Vue from 'vue'
+import Router from 'vue-router'
+import Dashboard from '@/components/Dashboard'
+import Notifications from '@/components/Notifications'
+import NotificationsForm from '@/components/NotificationsForm'
+import ErrPage500 from '@/components/ErrPage500'
+import NewForm from '@/apps/eventCollab/EventCollab'
+import Viewer from '@/apps/eventViewer/Viewer'
+
+Vue.use(Router)
+
+export default new Router({
+  routes: [
+    {
+      path: '/token=*',
+      component: Dashboard
+    },
+    {
+      path: '*',
+      redirect: '/dashboard'
+    },
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: Dashboard
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: Dashboard
+    },
+    {
+      path: '/Logout',
+      name: 'Logout',
+      component: Dashboard
+    },
+    {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: Dashboard
+    },
+    {
+      path: '/notifications',
+      name: 'Notifications',
+      component: Notifications
+    },
+    {
+      path: '/notifications-form',
+      name: 'NotificationsForm',
+      component: NotificationsForm
+    },
+    {
+      path: '/500',
+      name: 'Error Page 500',
+      component: ErrPage500
+    },
+    {
+      path: '/form',
+      name: 'New Form',
+      component: NewForm
+    },
+    {
+      path: '/resource*',
+      name: 'resource',
+      component: Dashboard
+    },
+    {
+      path: '/viewer',
+      name: 'Viewer',
+      component: Viewer
+    }
+  ]
+})
