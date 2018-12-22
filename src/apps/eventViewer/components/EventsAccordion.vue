@@ -34,7 +34,7 @@
         <!-- IF HIDE INDEX IS SAME AS SHOW, SET TO -1 (ALL ARE COLLAPSED) -->
         <b-collapse :id="`a${index}`" accordion="test-accordion" role="tabpanel" @show="activeIndex = index" @hide="hideIndex(index)">
           <b-card-body>
-            <event-view :event="event"></event-view>
+            <event-view @reqUpdate="handleReq" :event="event"></event-view>
           </b-card-body>
         </b-collapse>
       </b-card>
@@ -61,6 +61,9 @@ export default{
   },
   computed: {},
   methods: {
+    handleReq (event) {
+      console.log(event)
+    },
     tMore () {
       if (screen.width < 375) {
         return 25
@@ -138,9 +141,9 @@ $bootstrapMd: 768px;
   border: none;
 }
 
- #eventTitle{
+//  #eventTitle{
   /*overflow-x: hidden;*/
- }
+//  }
 
  @media (max-width: 550px){
   #eventTime{

@@ -1,6 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+import store from './store'
 import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import err500 from './ErrPage500'
@@ -14,7 +15,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome'
 import { faRocket, faAngleDown, faAngleRight, faSignOutAlt, faBell, faAngleDoubleLeft, faBars, faTachometerAlt, faLink, faUser, faCog, faSuitcase, faHandshake,
 faChevronDown, faChevronRight, faCircleNotch, faSyncAlt, faChevronUp, faPlus, faMinus, faSync, faEnvelope, faPowerOff, faSearch, faTimes, faPhone } from '@fortawesome/free-solid-svg-icons'
-import {faEnvelope as farEnvelope, faUser as farUser} from '@fortawesome/free-regular-svg-icons'
+import {faEnvelope as farEnvelope, faUser as farUser, faEdit} from '@fortawesome/free-regular-svg-icons'
 import { faFacebookF, faTwitter, faYoutubeSquare } from '@fortawesome/free-brands-svg-icons'
 import 'jquery-ui/ui/widgets/datepicker'
 import 'jquery-ui/themes/base/core.css'
@@ -22,7 +23,7 @@ import 'jquery-ui/themes/base/datepicker.css'
 import 'jquery-ui/themes/base/theme.css'
 library.add(faRocket, faSignOutAlt, faBell, faAngleDown, faAngleRight, faAngleDoubleLeft, faBars, faTachometerAlt, faLink, faUser, faCog, faSuitcase, faHandshake,
 faChevronDown, faChevronRight, faCircleNotch, faSyncAlt, faChevronUp, faPlus, faMinus, faSync, faEnvelope, farEnvelope, farUser, faPowerOff, faSearch, faTimes,
-faFacebookF, faTwitter, faYoutubeSquare, faPhone)
+faFacebookF, faTwitter, faYoutubeSquare, faPhone, faEdit)
 Vue.filter('truncate', (str, length = 40) => { return (str.length <= length) ? str : `${str.substring(0, length - 3)}...` })
 Vue.component('icon', FontAwesomeIcon)
 Vue.component('icon-layers', FontAwesomeLayers)
@@ -63,6 +64,7 @@ $(window).resize(() => {
 window.myApp = new Vue({
   el: '#app',
   router,
+  store,
   template: '<App />',
   components: { App, err500 }
 })

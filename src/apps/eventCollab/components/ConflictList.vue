@@ -53,7 +53,7 @@ export default {
       this.conflicts = []
       for (let match of this.occur) {
         console.log(match)
-        fetch(`https://websrvcs.sa.uic.edu/api/sao/events/?token=${this.$parent.$parent.authUser.token}&startDate=${match.startDate}&endDate=${match.endDate}`).then(res => res.json()).then(res => {
+        fetch(`https://websrvcs.sa.uic.edu/api/sao/events/?token=${this.$store.state.authUser.token}&startDate=${match.startDate}&endDate=${match.endDate}`).then(res => res.json()).then(res => {
           $.each(res, (i, v) => {
             // console.log(i, v)
             this.conflicts.push(v)

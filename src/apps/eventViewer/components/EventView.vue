@@ -1,7 +1,16 @@
 <template>
   <div>
-    <h2 align="left">{{event.name}}</h2>
-    <h5 align="left">{{event.description}}</h5>
+    <b-container fluid>
+      <b-row>
+        <b-col>
+        <h2 align="left">{{event.name}}</h2>
+        <h5 align="left">{{event.description}}</h5>
+        </b-col>
+        <b-col class="" cols="0">
+          <edit-btn :event="event" />
+        </b-col>
+      </b-row>
+    </b-container>
     
     <hr/>
     <b-badge v-if="event.status==='confirmed'" variant="success">
@@ -38,6 +47,7 @@
 </template>
 
 <script>
+import EditModal from './helpers/EditModal'
 export default {
   name: 'EventView',
   data () {
@@ -48,8 +58,16 @@ export default {
   props: {
     event: Object
   },
+  components: {
+    'edit-btn': EditModal
+  },
   mounted () {
     // this.title = "Default Title"
+  },
+  methods: {
+    reqUpdate () {
+      this.$emit('reqUpdate', this.event)
+    }
   }
 }
 </script>

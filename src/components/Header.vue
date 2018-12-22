@@ -129,12 +129,12 @@
 </template>
 
 <script>
-
+import { mapState } from 'vuex'
 import SearchModal from '@/components/SearchModal'
 
 export default {
   name: 'sao-header',
-  props: ['user', 'time'],
+  props: ['user'],
   data () {
     return {
       // aviData: [{icon: ['far', 'user'], text: 'My Profile', link: '/profile'}, {icon: ['far', 'envelope'], text: 'Inbox'}, {icon: 'cog', text: 'Settings', link: '/settings'}, {icon: 'power-off', text: 'Logout', link: '/Logout', click: () => { this.$emit('logout') }}],
@@ -151,6 +151,7 @@ export default {
     // }
   },
   computed: {
+    ...mapState(['time']),
     // displayedNotes () {
     //   const listed = Array.from(this.user.notifications)
     //   return listed.slice(0, 6)

@@ -5,27 +5,27 @@
       <h1>You may not be authorized to access this application. Please seek your UIC web Admin for more details.</h1>
     </section>
     <section v-else>
-      <sao-header :time="time()" @logout="Reqlogout()" :user="authUser"/>
+      <sao-header @logout="Reqlogout()" :user="authUser"/>
       <side-nav @logout="Reqlogout()" :resources="authUser.resourceGroups" />
-      <router-view :time="time()" :authUser="authUser"></router-view>
+      <router-view :time="time" :authUser="authUser"></router-view>
       <sao-footer />
     </section>
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 import Header from '@/components/Header'
 import SideNav from '@/components/SideNav'
 import Footer from '@/components/Footer'
 import jwt from 'jsonwebtoken'
 import pub from '../static/JWT_SIGNING_KEY.pub'
-import moment from 'moment'
+// import moment from 'moment'
 
 export default {
   name: 'app',
   data () {
     return {
-      authUser: { notesUnseen: 0 }
     }
   },
   beforeCreate () {
@@ -42,14 +42,23 @@ export default {
     }
   },
   created () {
-    this.$set(this.authUser, 'token', localStorage.getItem('token'))
+    // this.$set(this.authUser, 'token', localStorage.getItem('token'))
+    this.$store.commit('SAVE_TOKEN', localStorage.getItem('token'))
     // console.log(this.authUser.token)
     // if (token === null || token === undefined) {
     //   console.log('no token boi!')
     // }
-    fetch(`https://websrvcs.sa.uic.edu/api/sao/announcements/?since=2018-08-08&token=${this.authUser.token}`).then(res => res.json()).then((data) => { this.$set(this.authUser, 'notifications', data); this.$set(this.authUser, 'notesDisplayed', data.slice(0, 6)); this.$set(this.authUser, 'notesUnseen', 0) })
+    // this.buildUser()
+    fetch(`https://websrvcs.sa.uic.edu/api/sao/announcements/?since=2018-08-08&token=${this.authUser.token}`).then(res => res.json()).then((data) => {
+      this.$set(this.authUser, 'notifications', data)
+      this.$set(this.authUser, 'notesDisplayed', data.slice(0, 6))
+      this.$set(this.authUser, 'notesUnseen', 0)
+    })
 
-    fetch(`https://websrvcs.sa.uic.edu/api/sao/announcements/?since=2018-08-08&priority=1&token=${this.authUser.token}`).then(res => res.json()).then((data) => { this.$set(this.authUser, 'notesPriority', data.slice(0, 4).reverse()) })
+    fetch(`https://websrvcs.sa.uic.edu/api/sao/announcements/?since=2018-08-08&priority=1&token=${this.authUser.token}`).then(res => res.json())
+      .then((data) => {
+        this.$set(this.authUser, 'notesPriority', data.slice(0, 4).reverse())
+      })
 
     // fetch(`./static/JWT_SIGNING_KEY.pub`).then(res => console.log(res.json()))
     fetch('https://randomuser.me/api/').then((res) => res.json()).then((data) =>
@@ -138,8 +147,10 @@ export default {
     }
   },
   computed: {
+    ...mapState(['authUser', 'time'])
   },
   methods: {
+    ...mapActions(['newNote', 'buildUser']),
     webSocket () {
       const sudo = this
       const socket = new WebSocket(`wss://websrvcs.sa.uic.edu/api/sao/announcements/ws/?since=2018-08-08&token=${this.authUser.token}`)
@@ -158,22 +169,11 @@ export default {
           // console.log(this)
         } else {
           console.log(message, message.priority)
-          sudo.authUser.notesUnseen++
-          if (message.priority === 1) {
-            sudo.authUser.notesPriority.push(message)
-            sudo.authUser.notesPriority.shift()
-            sudo.authUser.notesDisplayed.unshift(message)
-            sudo.authUser.notesDisplayed.pop()
-            sudo.authUser.notifications.unshift(message)
-          } else {
-            sudo.authUser.notesDisplayed.unshift(message)
-            sudo.authUser.notesDisplayed.pop()
-            sudo.authUser.notifications.unshift(message)
-          }
+          sudo.newNote(message)
         }
       })
     },
-    time () { return moment },
+    // time () { return moment },
     Reqlogout () {
       this.authUser.token = null
       localStorage.removeItem('token')

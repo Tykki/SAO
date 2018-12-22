@@ -2,10 +2,10 @@
   <div id="main-content">
     <h1>{{title}}</h1>
     
-    <b-card border-variant="default" class="shadow-sm">
+    <b-card border-variant="default" :class="{ 'shadow-sm': event ? null : true }">
       <b-form id="eventForm" class="text-left" @submit.prevent="submit" novalidate :validated="submitted">
 
-          <b-alert :show="errAlert" variant="danger"><span v-for="error in errLog.errMsg">{{error}}</span></b-alert>
+          <b-alert :show="errAlert" variant="danger"><span v-for="(error, err) in errLog.errMsg" :key="err">{{error}}</span></b-alert>
           
 
         <b-form-row>
@@ -15,7 +15,8 @@
                       label-cols="1"
                       label="Event Name:"
                       label-for="eventName"> <!-- make breakpoints for better use of horizontal view -->
-              <b-form-input required id="eventName" v-model="formData.eventName" type="text" placeholder="Ex: Taco Tuesday" />
+              <b-form-input v-if="!event" required id="eventName" v-model="formData.eventName" type="text" placeholder="Ex: Taco Tuesday" />
+              <b-form-input v-if="event" required id="eventName" v-model="event.name" type="text" placeholder="Ex: Taco Tuesday" />
             <b-form-invalid-feedback>Please Enter an Event Name</b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -30,7 +31,8 @@
                       label-cols="2"
                       label="Department:"
                       label-for="department"> <!-- make breakpoints for better use of horizontal view -->
-              <b-form-select required id="department" v-model="formData.department" :options="departments" />
+              <b-form-select v-if="!event" required id="department" v-model="formData.department" :options="departments" />
+              <b-form-select v-if="event" required id="department" v-model="event.department" :options="departments" />
             <b-form-invalid-feedback>Please Select a Department</b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -41,7 +43,8 @@
                       label-cols="2"
                       label="Audience:"
                       label-for="audience"> <!-- make breakpoints for better use of horizontal view -->
-              <b-form-select required id="audience" v-model="formData.audience" :options="audiences" />
+              <b-form-select v-if="!event" required id="audience" v-model="formData.audience" :options="audiences" />
+              <b-form-select v-if="event" required id="audience" v-model="event.audience" :options="audiences" />
             <b-form-invalid-feedback>Please Select an Audience</b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -56,7 +59,8 @@
                   label-cols="2"
                   label="Description:"
                   label-for="description"> <!-- make breakpoints for better use of horizontal view -->
-          <b-form-textarea required id="description" v-model="formData.description" rows="6" />
+          <b-form-textarea v-if="!event" required id="description" v-model="formData.description" rows="6" />
+          <b-form-textarea v-if="event" required id="description" v-model="event.description" rows="6" />
             <b-form-invalid-feedback>Please Enter a Description</b-form-invalid-feedback>
         </b-form-group>
             
@@ -69,7 +73,8 @@
                         class="labelAdj"
                         label="Category:"
                         label-for="category">
-                <b-form-select required id="category" v-model="formData.category" :options="categories" />
+                <b-form-select v-if="!event" required id="category" v-model="formData.category" :options="categories" />
+                <b-form-select v-if="event" required id="category" v-model="event.category" :options="categories" />
             <b-form-invalid-feedback>Please Select a Category</b-form-invalid-feedback>
               </b-form-group>
               
@@ -84,7 +89,8 @@
                           class="labelAdj"
                           label="Status:"
                           label-for="status">
-                  <b-form-select required id="status" v-model="formData.status" :options="status" />
+                  <b-form-select v-if="!event" required id="status" v-model="formData.status" :options="status" />
+                  <b-form-select v-if="event" required id="status" v-model="event.status" :options="status" />
             <b-form-invalid-feedback>Please Select a Statue</b-form-invalid-feedback>
                 </b-form-group>
               </b-col>          
@@ -100,7 +106,8 @@
                   label-cols="2"
                   label="Theme:"
                   label-for="theme"> <!-- make breakpoints for better use of horizontal view -->
-              <b-form-input id="theme" v-model="formData.theme" />
+              <b-form-input v-if="!event" id="theme" v-model="formData.theme" />
+              <b-form-input v-if="event" id="theme" v-model="event.theme" />
             </b-form-group>
           </b-collapse>
           </b-col>
@@ -111,10 +118,10 @@
             <b-link class="pl-3" @click="Ctheme = !Ctheme">{{themeLabel}}</b-link>
             <br>
             <br>
-            <form-modal class="pl-3" ref="formModal" @addOccur="showOccur" :locations="locations"></form-modal>
+            <form-modal v-if="!event" class="pl-3" ref="formModal" @addOccur="showOccur" :locations="locations"></form-modal>
             <br />
             <br />
-            <occur-list @deleteReq="deleteOccur" @editReq="editOccur" :locations="locations" :occurrences="formData.occurrences" />
+            <occur-list v-if="!event" @deleteReq="deleteOccur" @editReq="editOccur" :locations="locations" :occurrences="formData.occurrences" />
             <!-- <br/> -->
           </b-col>
         <b-col class="text-right">
@@ -138,7 +145,7 @@ import OccurList from '@/apps/eventCollab/components/OccurList'
 
 export default {
   name: 'Event-Form',
-  props: ['title'],
+  props: ['title', 'event'],
   data () {
     return {
       errLog: {
@@ -151,7 +158,7 @@ export default {
       categories: [],
       status: [],
       formData: { occurrences: [] },
-      Ctheme: false,
+      Ctheme: true,
       submitted: false
     }
   },
@@ -160,7 +167,7 @@ export default {
     'occur-list': OccurList
   },
   created () {
-    fetch(`https://websrvcs.sa.uic.edu/api/sao/events/metadata/?token=${this.$parent.$parent.authUser.token}`).then(function (res) {
+    fetch(`https://websrvcs.sa.uic.edu/api/sao/events/metadata/?token=${this.$store.state.authUser.token}`).then(function (res) {
       return res.json()
     }).then(data => {
       $.each(data, (i, v) => {
@@ -216,7 +223,13 @@ export default {
         return true
       }
     },
+    update () {
+      console.log(this, this.$refs)
+    },
     submit () {
+      if (this.event) {
+        return this.update()
+      }
       this.submitted = true
       console.log(this.occurValid(), this.eventForm().checkValidity())
       if ((this.occurValid() === true) && (this.eventForm().checkValidity() === true)) {
@@ -277,10 +290,10 @@ export default {
   padding: 5px;
   padding-top: 0px;
 }
-.card-body{
+/* .card-body{ */
   /*padding-left: 120px;*/
   /*padding-right: 120px;*/
-}
+/* } */
 
 ul {
   list-style-type: none;

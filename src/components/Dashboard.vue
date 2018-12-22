@@ -49,7 +49,7 @@
                         <p class="card-text text-secondary">{{news.description}}</p>
                         <label>Author:</label> <span>{{news.author}}</span>
                         <!-- <b-input size="sm" type="datetime-local" :value="new Date(news.pubDate)" /> -->
-                        <b-btn class="float-right" size="sm" variant="outline-secondary" :href="news.link">Read Article</b-btn>
+                        <b-btn class="float-right" size="sm" variant="outline-secondary" target="_blank" :href="news.link">Read Article</b-btn>
                     </b-col>
                 </b-row>
             </b-card>
@@ -65,8 +65,14 @@
             </b-card>
                 
             </b-card>
-            <section class="text-right mb-3" id="media-icons">
-                <b-btn v-for="(icon, i) in mediaIcons" :key="i" :variant="icon.color" class="mr-3"><icon :icon="['fab', `${icon.name}`]" /></b-btn>
+            <section class="" id="media-icons">
+              <b-row v-for="(icon, i) in mediaIcons" :key="i">
+                <b-col cols="12">
+                  <b-btn :variant="icon.color" class="media-icon-width" target="_blank" :href="icon.link">
+                    <icon :icon="['fab', `${icon.name}`]" class="float-left mt-1"/> <span class="">{{icon.text}}</span>
+                  </b-btn>
+                </b-col>
+              </b-row>
             </section>
         </b-col>
     </b-row>
@@ -77,20 +83,22 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import notifications from './Notifications'
 export default {
-  name: 'Splash',
-  props: { authUser: Object, time: Function },
+  name: 'Dashboard',
+  // props: { authUser: Object, time: function },
   components: { 'notifications': notifications },
   data () {
     return {
       title: 'Welcome,',
       meetingFocus: null,
-      // authUser: this.$attrs.authUser,
       newsFocus: null,
-      // priorityNotes: authUser.priorityNotes,
-      mediaIcons: [{name: 'facebook-f', color: 'fbBlue'}, {name: 'twitter', color: 'twBlue'}, {name: 'youtube-square', color: 'ytRed'}],
-      upcomingMeetings: [{text: 'Long!'}, {text: 'Live!'}, {text: 'The!'}, {text: 'King!'}],
+      mediaIcons: [
+        {name: 'facebook-f', text: 'UIC Life on Facebook', color: 'fbBlue', link: 'https://www.facebook.com/UIClife/'},
+        {name: 'twitter', text: 'UIC Life on Twitter', color: 'twBlue', link: 'https://twitter.com/uiclife?lang=en'},
+        {name: 'youtube-square', text: 'UIC Life on YouTube', color: 'ytRed', link: 'https://www.youtube.com/user/UIClife'}
+      ],
       proDev: {},
       UICnews: {}
     }
@@ -105,6 +113,9 @@ export default {
       })
     })
     // fetch(`https://websrvcs.sa.uic.edu/api/sao/announcements/?since=2018-08-08&priority=1&token=${this.authUser.token}`).then(res => res.json()).then((data) => { this.$set(this.priorityNotes, 'display', data.slice(0, 4).reverse()); console.log(data) })
+  },
+  computed: {
+    ...mapState(['authUser', 'time'])
   },
   methods: {
     testing () {
@@ -133,20 +144,24 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-    .news-thumbnail{
-        /*max-height: 80px;*/
-        max-width: 175px;
-    }
-    #saTechBanner{
-      max-width: 250px;
-    }
-    .proDevBtn{
-      border-radius: 21px
-    }
-    @media screen and (min-width: 992px) and (max-width: 1269px) {
-      #saTechBanner{
-        max-width: 180px !important;
+<style scoped lang="scss">
+.media-icon-width{
+  width: inherit;
+  margin-bottom: 12px;
+}
+.news-thumbnail{
+    /*max-height: 80px;*/
+    max-width: 175px;
+}
+#saTechBanner{
+  max-width: 250px;
+}
+.proDevBtn{
+  border-radius: 21px
+}
+@media screen and (min-width: 992px) and (max-width: 1269px) {
+  #saTechBanner{
+    max-width: 180px !important;
   }
 }
 </style>
