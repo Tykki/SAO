@@ -32,7 +32,7 @@
                   <b-img id="avatar" src="" alt="user avatar" />
                   <!-- <div id="avatar"><span>{{this.$parent.authUser.initials}}</span></div> -->
                 </b-link>
-                <span v-if="displayNameHasSpace" id="displayName">{{user.displayName}}</span>
+                <span v-if="displayNameHasSpace" id="displayName">Last Name, First Name</span>
                 <!-- <b-link id="menuBars" href="#" class="">
                     <icon icon="bars" />
                 </b-link> -->

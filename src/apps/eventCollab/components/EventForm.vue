@@ -250,7 +250,8 @@ export default {
         console.log(parsedData)
         // this.$('addReq', parsedData)
         // fetch('/static/testing.json').then(res => res.json()).then(res => console.log(res))
-        fetch('https://websrvcs.sa.uic.edu/api/sao/events/', {method: 'post', mode: 'cors', body: JSON.stringify(parsedData), headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}`}}).then(res => console.log(res))
+        // fetch('https://websrvcs.sa.uic.edu/api/sao/events/', {method: 'post', mode: 'cors', body: JSON.stringify(parsedData), headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}`}}).then(res => console.log(res))
+        console.log('This is testing, no real post to events API can be allowed')
         this.submitted = false
         this.formData = { occurrences: [] }
       }

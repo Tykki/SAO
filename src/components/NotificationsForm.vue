@@ -110,7 +110,8 @@ export default {
         // for (const pair of this.formData.entries()) {
         //   body[pair[0]] = pair[1]
         // }
-        fetch('https://websrvcs.sa.uic.edu/api/sao/announcements/', {method: 'post', body: JSON.stringify(this.formData), headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}`}}).then(res => console.log(res))
+        // fetch('https://websrvcs.sa.uic.edu/api/sao/announcements/', {method: 'post', body: JSON.stringify(this.formData), headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}`}}).then(res => console.log(res))
+        console.log('This is for testing cannot allow real post to API')
         this.submitted = false
         this.formData = {}
       }

@@ -7,7 +7,7 @@
 
 <script>
   import eventForm from '@/apps/eventCollab/components/EventForm'
-  import conflictList from '@/apps/eventCollab/components/conflictList'
+  import conflictList from '@/apps/eventCollab/components/ConflictList'
   
   export default {
     name: 'Event-Collab',

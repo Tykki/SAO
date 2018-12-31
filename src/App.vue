@@ -28,22 +28,23 @@ export default {
     return {
     }
   },
-  beforeCreate () {
-    let token = window.location.hash.split('=')[1]
-    if (token === null || token === undefined) {
-      if (localStorage.getItem('token') === undefined || localStorage.getItem('token') === null || localStorage.getItem('token') === '') {
-        // console.log('No Token BOI')
-        window.location.href = 'https://websrvcs.sa.uic.edu/api/sao/auth'
-        return
-      }
-    }
-    if (localStorage.getItem('token') === undefined || localStorage.getItem('token') === null || localStorage.getItem('token') === '') {
-      localStorage.setItem('token', token)
-    }
-  },
+  // beforeCreate () {
+  //   let token = window.location.hash.split('=')[1]
+  //   if (token === null || token === undefined) {
+  //     if (localStorage.getItem('token') === undefined || localStorage.getItem('token') === null || localStorage.getItem('token') === '') {
+  //       // console.log('No Token BOI')
+  //       window.location.href = 'https://websrvcs.sa.uic.edu/api/sao/auth'
+  //       return
+  //     }
+  //   }
+  //   if (localStorage.getItem('token') === undefined || localStorage.getItem('token') === null || localStorage.getItem('token') === '') {
+  //     localStorage.setItem('token', token)
+  //   }
+  // },
   created () {
     // this.$set(this.authUser, 'token', localStorage.getItem('token'))
-    this.$store.commit('SAVE_TOKEN', localStorage.getItem('token'))
+    this.$store.commit('SAVE_TOKEN', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFla3dlajJAdWljLmVkdSIsImRpc3BsYXlOYW1lIjoiRWt3ZWp1bm9yLUV0Y2hpZSwgQXlpcmkgRXJ1dnV3IiwibmV0aWQiOiJhZWt3ZWoyIiwidWluIjoiNjU1NDQwODIzIiwiZ2l2ZW5OYW1lIjoiQXlpcmkiLCJzdXJuYW1lIjoiRWt3ZWp1bm9yLUV0Y2hpZSIsImdyb3VwcyI6WyJETC1BbGwgTmV0SURzIiwiREwtWFAgTGFiIFVzZXJzIiwiR0ctQVRMQVNTSUFOIEJBTUJPTyIsIkdHLUFUTEFTU0lBTiBCSVRCVUNLRVQiLCJHRy1BVExBU1NJQU4gQ09ORkxVRU5DRSIsIkdHLUFUTEFTU0lBTiBERVYiLCJHRy1BVExBU1NJQU4gREVWLVNUVURFTlQiLCJHRy1BVExBU1NJQU4gU0VSVklDRURFU0siLCJHRy1BVExBU1NJQU4gU09GVFdBUkUiLCJHRy1BVExBU1NJQU4gVVNFUlMiLCJHRy1BVExBU1NJQU4gV0VCIiwiR0ctQVRMQVNTSUFOIFdFQi1TVFVERU5UIiwiR0ctVkNTQS1FdmVyeW9uZSIsIkdHLVhQIExhYiBVc2VycyIsImdnLXNhLXNjLWdyYXBoaWNzIiwiZ2ctdmNzYS1XZWIgRGV2ZWxvcGVyIiwiZ2ctdmNzYS12Y3NhLXN0YWZmIl0sImlhdCI6MTU0NjIzMjcwMSwiZXhwIjoxNTQ3NDQyMzAxLCJpc3MiOiJodHRwczovL3dlYnNydmNzLnNhLnVpYy5lZHUvYXBpL3Nhby9hdXRoIn0.bTslo4cZU9OXqIHK0q8TTeX93FWS9pTr4cSj3y61edZBFF2yEyzxLUIscIm8bJq9pwT8cMmpO2T-h7BnfuaNiyP2t4EHJI2M9Jwk204Cn-lr8UFO2Xs2Mo0pl39dNiSDhel3wZ7450WxT0jJup30ojWjFRyewLkzGAiDm5KhNTOZBu9sioLLWfyk95TKVCRFx_GBkuF1VoPgWxliq9G2IUVhoqF6P3o0HRYqQRVATXksYpSifYmRAdV1mns4QQaDIc4SF7B4W8F3Djsme0eUQqgWFFCuXC_uOqYdzjb3OYP9rXBIJ-yuzDIXu3hoFGwlPNcTNUbfGh1c7bQqgkz8pg')
+    // this.$store.commit('SAVE_TOKEN', localStorage.getItem('token'))
     // console.log(this.authUser.token)
     // if (token === null || token === undefined) {
     //   console.log('no token boi!')
