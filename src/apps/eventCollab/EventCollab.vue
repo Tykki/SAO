@@ -13,7 +13,6 @@
     name: 'Event-Collab',
     data () {
       return {
-        title: 'Event Form',
         occur: []
       }
     },

@@ -7,7 +7,8 @@
   <!-- Modal Component -->
   <b-modal size="lg" ref="editModal" hide-footer ok-title="Update" cancel-title="Delete" title="Event Updater">
     
-      <update-form :event="event"></update-form>
+      <update-form :event="event" />
+      <update-occur />
 
   </b-modal>
 </div>
@@ -15,9 +16,10 @@
 
 <script>
   import UpdateForm from '@/apps/eventCollab/components/EventForm'
+  import UpdateOccur from '@/apps/eventCollab/components/FormModal'
   export default {
     name: 'editModal',
-    components: { 'update-form': UpdateForm },
+    components: { 'update-form': UpdateForm, 'update-occur': UpdateOccur },
     props: ['event'],
     data () {
       return {

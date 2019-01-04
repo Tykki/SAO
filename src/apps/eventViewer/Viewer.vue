@@ -1,7 +1,7 @@
 <template>
     <b-container id="display" fluid>
     	
-      <viewer :time="time" :title="title" />
+      <viewer :title="title" />
     </b-container>
 </template>
 
@@ -9,7 +9,6 @@
 import View from './components/EventsViewer'
 export default {
   name: 'Event-Viewer',
-  props: ['time'],
   data () {
     return {
       title: 'Events'

@@ -8,11 +8,26 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    authUser: {},
-    time () { return moment() }
+    authUser: { notifications: [], notesDisplayed: [], notesUnseen: 0, notesPriority: [] },
+    formInputs: {
+      event: {
+        audiences: [],
+        categories: [],
+        departments: [],
+        status: [],
+        locations: []
+      },
+      notes: {}
+    },
+    time (data) { return moment(data) }
   },
   getters: {
-
+    eventInputs (state) {
+      return state.formInputs.event
+    },
+    token (state) {
+      return state.authUser.token
+    }
   },
   mutations: {
     SAVE_TOKEN (state, token) {
@@ -108,6 +123,40 @@ export default new Vuex.Store({
         })
       })
     },
+    FORM_INFO (state) {
+      fetch(`https://websrvcs.sa.uic.edu/api/sao/events/metadata/?token=${state.authUser.token}`).then(function (res) {
+        return res.json()
+      }).then(data => {
+        $.each(data, (i, v) => {
+          // console.log(i, v)
+          if (i === 'audiences') {
+            for (let item of v) {
+              state.formInputs.event.audiences.push({ value: item.id, text: item.name })
+            }
+          }
+          if (i === 'categories') {
+            for (let item of v) {
+              state.formInputs.event.categories.push({ value: item.id, text: item.name })
+            }
+          }
+          if (i === 'departments') {
+            for (let item of v) {
+              state.formInputs.event.departments.push({ value: item.id, text: item.name })
+            }
+          }
+          if (i === 'status') {
+            for (let item of v) {
+              state.formInputs.event.status.push({ value: item.id, text: item.name })
+            }
+          }
+          if (i === 'locations') {
+            for (let item of v) {
+              state.formInputs.event.locations.push({ value: item.id, text: item.name })
+            }
+          }
+        })
+      })
+    },
     NEW_NOTE (state, mess) {
       state.authUser.notesUnseen++
       if (mess.priority === 1) {
@@ -125,10 +174,13 @@ export default new Vuex.Store({
   },
   actions: {
     buildUser ({commit}) {
-      return commit('BUILD_USER')
+      commit('BUILD_USER')
     },
     newNote ({commit}, mess) {
       commit('NEW_NOTE', mess)
+    },
+    formInfo ({commit}) {
+      commit('FORM_INFO')
     }
   }
 })

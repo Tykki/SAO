@@ -40,7 +40,7 @@
               </b-list-group>
             </b-card>
 
-            <h4 @click="testing">UIC News</h4>
+            <h4>UIC News</h4>
             <b-card v-for="(news, n) of UICnews.display" :key="n" class="shadow-sm" :class="{'shadow-lg': newsFocus === n}" @mouseover="newsFocus = n" @mouseout="newsFocus = null">
                 <b-row>
                     <b-col><b-img v-if="news.thumbnail" class="news-thumbnail" :src="news.thumbnail" alt="img" /></b-col>
@@ -99,7 +99,7 @@ export default {
         {name: 'twitter', text: 'UIC Life on Twitter', color: 'twBlue', link: 'https://twitter.com/uiclife?lang=en'},
         {name: 'youtube-square', text: 'UIC Life on YouTube', color: 'ytRed', link: 'https://www.youtube.com/user/UIClife'}
       ],
-      proDev: {},
+      proDev: [],
       UICnews: {}
     }
   },
@@ -109,7 +109,10 @@ export default {
     })
     fetch(`https://websrvcs.sa.uic.edu/api/sao/events/?token=${this.authUser.token}&category=16`).then(res => res.json()).then(res => {
       $.each(res, (i, v) => {
-        this.$set(this.proDev, `event${[i]}`, v)
+        if (this.proDev.length < 3) {
+          this.proDev.push(v)
+        }
+        // this.$set(this.proDev, `event${[i]}`, v)
       })
     })
     // fetch(`https://websrvcs.sa.uic.edu/api/sao/announcements/?since=2018-08-08&priority=1&token=${this.authUser.token}`).then(res => res.json()).then((data) => { this.$set(this.priorityNotes, 'display', data.slice(0, 4).reverse()); console.log(data) })
@@ -118,11 +121,8 @@ export default {
     ...mapState(['authUser', 'time'])
   },
   methods: {
-    testing () {
-      // this.priorityNotes = Array.from(this.$parent.authUser.notifications)
-    },
     btnColor (i) {
-      if (i === 'event1') {
+      if (i === 1) {
         return 'prime2'
       } else { return 'warning' }
     },

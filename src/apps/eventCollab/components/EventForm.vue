@@ -1,8 +1,8 @@
 <template>
   <div id="main-content">
-    <h1>{{title}}</h1>
+    <h1>{{title()}}</h1>
     
-    <b-card border-variant="default" :class="{ 'shadow-sm': event ? null : true }">
+    <b-card border-variant="default" :class="{ 'shadow-sm': true }">
       <b-form id="eventForm" class="text-left" @submit.prevent="submit" novalidate :validated="submitted">
 
           <b-alert :show="errAlert" variant="danger"><span v-for="(error, err) in errLog.errMsg" :key="err">{{error}}</span></b-alert>
@@ -31,8 +31,8 @@
                       label-cols="2"
                       label="Department:"
                       label-for="department"> <!-- make breakpoints for better use of horizontal view -->
-              <b-form-select v-if="!event" required id="department" v-model="formData.department" :options="departments" />
-              <b-form-select v-if="event" required id="department" v-model="event.department" :options="departments" />
+              <b-form-select v-if="!event" required id="department" v-model="formData.department" :options="eventInputs.departments" />
+              <b-form-select v-if="event" required id="department" v-model="event.department" :options="eventInputs.departments" />
             <b-form-invalid-feedback>Please Select a Department</b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -43,8 +43,8 @@
                       label-cols="2"
                       label="Audience:"
                       label-for="audience"> <!-- make breakpoints for better use of horizontal view -->
-              <b-form-select v-if="!event" required id="audience" v-model="formData.audience" :options="audiences" />
-              <b-form-select v-if="event" required id="audience" v-model="event.audience" :options="audiences" />
+              <b-form-select v-if="!event" required id="audience" v-model="formData.audience" :options="eventInputs.audiences" />
+              <b-form-select v-if="event" required id="audience" v-model="event.audience" :options="eventInputs.audiences" />
             <b-form-invalid-feedback>Please Select an Audience</b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -73,8 +73,8 @@
                         class="labelAdj"
                         label="Category:"
                         label-for="category">
-                <b-form-select v-if="!event" required id="category" v-model="formData.category" :options="categories" />
-                <b-form-select v-if="event" required id="category" v-model="event.category" :options="categories" />
+                <b-form-select v-if="!event" required id="category" v-model="formData.category" :options="eventInputs.categories" />
+                <b-form-select v-if="event" required id="category" v-model="event.category" :options="eventInputs.categories" />
             <b-form-invalid-feedback>Please Select a Category</b-form-invalid-feedback>
               </b-form-group>
               
@@ -89,8 +89,8 @@
                           class="labelAdj"
                           label="Status:"
                           label-for="status">
-                  <b-form-select v-if="!event" required id="status" v-model="formData.status" :options="status" />
-                  <b-form-select v-if="event" required id="status" v-model="event.status" :options="status" />
+                  <b-form-select v-if="!event" required id="status" v-model="formData.status" :options="eventInputs.status" />
+                  <b-form-select v-if="event" required id="status" v-model="event.status" :options="eventInputs.status" />
             <b-form-invalid-feedback>Please Select a Statue</b-form-invalid-feedback>
                 </b-form-group>
               </b-col>          
@@ -118,10 +118,10 @@
             <b-link class="pl-3" @click="Ctheme = !Ctheme">{{themeLabel}}</b-link>
             <br>
             <br>
-            <form-modal v-if="!event" class="pl-3" ref="formModal" @addOccur="showOccur" :locations="locations"></form-modal>
+            <form-modal :event="event" class="pl-3" ref="formModal" @addOccur="showOccur" :locations="eventInputs.locations"></form-modal>
             <br />
             <br />
-            <occur-list v-if="!event" @deleteReq="deleteOccur" @editReq="editOccur" :locations="locations" :occurrences="formData.occurrences" />
+            <occur-list :event="event" @deleteReq="deleteOccur" @editReq="editOccur" :locations="eventInputs.locations" :occurrences="formData.occurrences" />
             <!-- <br/> -->
           </b-col>
         <b-col class="text-right">
@@ -140,26 +140,23 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import FormModal from '@/apps/eventCollab/components/FormModal'
 import OccurList from '@/apps/eventCollab/components/OccurList'
 
 export default {
   name: 'Event-Form',
-  props: ['title', 'event'],
   data () {
     return {
+      title: () => this.event ? 'Update Form' : 'Create Form',
       errLog: {
         errCount: 0,
         errMsg: []
       },
-      locations: [],
-      departments: [],
-      audiences: [],
-      categories: [],
-      status: [],
       formData: { occurrences: [] },
       Ctheme: true,
-      submitted: false
+      submitted: false,
+      event: this.$route.params.event
     }
   },
   components: {
@@ -167,38 +164,6 @@ export default {
     'occur-list': OccurList
   },
   created () {
-    fetch(`https://websrvcs.sa.uic.edu/api/sao/events/metadata/?token=${this.$store.state.authUser.token}`).then(function (res) {
-      return res.json()
-    }).then(data => {
-      $.each(data, (i, v) => {
-        // console.log(i, v)
-        if (i === 'audiences') {
-          for (let item of v) {
-            this.audiences.push({value: item.id, text: item.name})
-          }
-        }
-        if (i === 'categories') {
-          for (let item of v) {
-            this.categories.push({value: item.id, text: item.name})
-          }
-        }
-        if (i === 'departments') {
-          for (let item of v) {
-            this.departments.push({value: item.id, text: item.name})
-          }
-        }
-        if (i === 'status') {
-          for (let item of v) {
-            this.status.push({value: item.id, text: item.name})
-          }
-        }
-        if (i === 'locations') {
-          for (let item of v) {
-            this.locations.push({value: item.id, text: item.name})
-          }
-        }
-      })
-    })
   },
   methods: {
     eventForm () { return document.getElementById('eventForm') },
@@ -224,7 +189,7 @@ export default {
       }
     },
     update () {
-      console.log(this, this.$refs)
+      console.log(this, this.event)
     },
     submit () {
       if (this.event) {
@@ -250,8 +215,7 @@ export default {
         console.log(parsedData)
         // this.$('addReq', parsedData)
         // fetch('/static/testing.json').then(res => res.json()).then(res => console.log(res))
-        // fetch('https://websrvcs.sa.uic.edu/api/sao/events/', {method: 'post', mode: 'cors', body: JSON.stringify(parsedData), headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}`}}).then(res => console.log(res))
-        console.log('This is testing, no real post to events API can be allowed')
+        fetch('https://websrvcs.sa.uic.edu/api/sao/events/', {method: 'post', mode: 'cors', body: JSON.stringify(parsedData), headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}`}}).then(res => console.log(res))
         this.submitted = false
         this.formData = { occurrences: [] }
       }
@@ -271,6 +235,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['eventInputs']),
     errAlert () {
       if ((this.submitted === false)) {
         return false

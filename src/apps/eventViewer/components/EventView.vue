@@ -7,7 +7,7 @@
         <h5 align="left">{{event.description}}</h5>
         </b-col>
         <b-col class="" cols="0">
-          <edit-btn :event="event" />
+          <b-btn variant="outline-secondary"><icon :icon="['far', 'edit']" @click="editEvent(event)" /></b-btn>
         </b-col>
       </b-row>
     </b-container>
@@ -17,14 +17,14 @@
       Confirmed
     </b-badge>
     <b-badge v-else variant="danger">
-      {{event.status}}
+      {{event.statusText}}
     </b-badge>
 
 
     <br/> theme: {{event.theme}}
-    <br/> status: {{event.status}}
-    <br/> category: {{event.category}}
-    <br/> audience: {{event.audience}}
+    <br/> status: {{event.statusText}}
+    <br/> category: {{event.categoryText}}
+    <br/> audience: {{event.audienceText}}
     <br/> created by: {{event.created_by}}
     <br/> created on: {{new Date(event.created_on).toLocaleDateString()}} {{new Date(event.created_on).toLocaleTimeString()}}
     <hr/>
@@ -48,6 +48,7 @@
 
 <script>
 import EditModal from './helpers/EditModal'
+import { mapGetters } from 'vuex'
 export default {
   name: 'EventView',
   data () {
@@ -58,13 +59,41 @@ export default {
   props: {
     event: Object
   },
+  computed: {
+    ...mapGetters(['eventInputs'])
+  },
   components: {
     'edit-btn': EditModal
   },
   mounted () {
-    // this.title = "Default Title"
+    this.numToNam()
   },
   methods: {
+    numToNam () {
+      this.eventInputs.audiences.filter(inp => {
+        if (this.event.audience === inp.value) {
+          this.$set(this.event, 'audienceText', inp.text)
+        }
+      })
+      this.eventInputs.categories.filter(inp => {
+        if (this.event.category === inp.value) {
+          this.$set(this.event, 'categoryText', inp.text)
+        }
+      })
+      this.eventInputs.departments.filter(inp => {
+        if (this.event.department === inp.value) {
+          this.$set(this.event, 'departmentText', inp.text)
+        }
+      })
+      this.eventInputs.status.filter(inp => {
+        if (this.event.status === inp.value) {
+          this.$set(this.event, 'statusText', inp.text)
+        }
+      })
+    },
+    editEvent (event) {
+      this.$router.push({name: 'Event Form', params: {event}})
+    },
     reqUpdate () {
       this.$emit('reqUpdate', this.event)
     }

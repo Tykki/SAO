@@ -147,6 +147,7 @@
 
 // todo input mask date
 
+import { mapState } from 'vuex'
 import EventView from './EventView'
 import CollapseInput from './helpers/CollapseInput'
 import EventsAccordion from './EventsAccordion'
@@ -157,7 +158,7 @@ import _ from 'lodash'
 
 export default {
   name: 'EventsViewer',
-  props: ['title', 'time'],
+  // props: ['title', 'time'],
   data () {
     return {
       hoverFocus: null,
@@ -190,7 +191,6 @@ export default {
       isLoading: false
     }
   },
-  created () {},
   components: {
     EventView,
     CollapseInput,
@@ -200,6 +200,23 @@ export default {
   },
   mounted () {
     this.load()
+  },
+  computed: {
+    ...mapState(['time']),
+    filteredEvents () {
+      if (this.filtersEnabled) {
+        return this.events.filter(x => {
+          for (let filter in this.filters) {
+            if (!this.filters[filter].evaluate(x)) {
+              return false
+            }
+          }
+          return x.name.toLowerCase().includes(this.searchTitle.toLowerCase()) || x.theme.toLowerCase().includes(this.searchTitle.toLowerCase())
+        })
+      } else {
+        return this.events.filter(x => (x.name.toLowerCase().includes(this.searchTitle.toLowerCase()) || x.theme.toLowerCase().includes(this.searchTitle.toLowerCase())))
+      }
+    }
   },
   watch: {
     selectedDepartments (newVal, oldVal) {
@@ -286,7 +303,7 @@ export default {
     },
     load: async function () {
       this.isLoading = true
-      this.events = await (await fetch(`https://websrvcs.sa.uic.edu/api/sao/events/?token=${this.$parent.$parent.authUser.token}`)).json()
+      this.events = await (await fetch(`https://websrvcs.sa.uic.edu/api/sao/events/?token=${this.$store.getters.token}`)).json()
       // console.log(this.events)
       await this.wait(1000)
 
@@ -349,22 +366,6 @@ export default {
         }
       }
       this.upcomingEvents.reverse()
-    }
-  },
-  computed: {
-    filteredEvents () {
-      if (this.filtersEnabled) {
-        return this.events.filter(x => {
-          for (let filter in this.filters) {
-            if (!this.filters[filter].evaluate(x)) {
-              return false
-            }
-          }
-          return x.name.toLowerCase().includes(this.searchTitle.toLowerCase()) || x.theme.toLowerCase().includes(this.searchTitle.toLowerCase())
-        })
-      } else {
-        return this.events.filter(x => (x.name.toLowerCase().includes(this.searchTitle.toLowerCase()) || x.theme.toLowerCase().includes(this.searchTitle.toLowerCase())))
-      }
     }
   }
 }

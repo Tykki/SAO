@@ -5,7 +5,7 @@
           <b-col md="4" lg="3" class="justify-content-start">
             <!-- <b-input-group id="headSearch" size="sm" >
               <b-input-group-append class="align-self-center"><icon icon="search"/></b-input-group-append> -->
-              <search-modal :resources="user.resourceGroups" />
+              <search-modal :resources="authUser.resourceGroups" />
               <!-- <input class="form-control" @keyup.enter="reqSearch" type="search" id="searchBar" placeholder="Search..." size="sm" :value="resourceSearch"/> -->
               <!-- <b-btn @keyup.enter="console.log('ello')" >ello</b-btn> -->
               
@@ -21,18 +21,18 @@
                     <icon icon="envelope" />
                 </b-link> -->
 
-                <b-link @click="user.notesUnseen = 0" @dblclick="notesForm" id="notes" class="">
+                <b-link @click="authUser.notesUnseen = 0" @dblclick="notesForm" id="notes" class="">
                   <icon-layers >
                     <icon icon="bell"/>
-                    <icon-layers-text v-show="user.notesUnseen > 0" class="fa-layers-top-right fa-layers-counter" transform="shrink-3 right-9 down-1" :value="user.notesUnseen" />
+                    <icon-layers-text v-show="authUser.notesUnseen > 0" class="fa-layers-top-right fa-layers-counter" transform="shrink-3 right-9 down-1" :value="authUser.notesUnseen" />
                   </icon-layers>
                   <!-- <i class="fas fa-bell has-badge" data-count="6"></i> -->
                 </b-link>
                 <b-link id="aviClick">
-                  <b-img id="avatar" src="" alt="user avatar" />
+                  <b-img id="avatar" src="" alt="authUser avatar" />
                   <!-- <div id="avatar"><span>{{this.$parent.authUser.initials}}</span></div> -->
                 </b-link>
-                <span v-if="displayNameHasSpace" id="displayName">Last Name, First Name</span>
+                <span v-if="displayNameHasSpace" id="displayName">{{authUser.displayName}}</span>
                 <!-- <b-link id="menuBars" href="#" class="">
                     <icon icon="bars" />
                 </b-link> -->
@@ -60,7 +60,7 @@
           </b-col>
         </b-row>
       </b-list-group-item>
-      <b-list-group-item class="noteItem" variant="prime2" href="#" v-for="(notes, i) of user.notesDisplayed" :key="i">
+      <b-list-group-item class="noteItem" variant="prime2" href="#" v-for="(notes, i) of authUser.notesDisplayed" :key="i">
         <!-- <b-row align-h="end" >
           <icon icon="times" />
         </b-row> -->
@@ -104,7 +104,7 @@
           </b-col>
         </b-row>
       </b-list-group-item>
-      <b-list-group-item class="noteItem" variant="prime2" href="#" v-for="(notes, i) of user.notifications.slice(0, 6)" :key="i">
+      <b-list-group-item class="noteItem" variant="prime2" href="#" v-for="(notes, i) of authUser.notifications.slice(0, 6)" :key="i">
         <b-row align-h="end" >
           <icon icon="times" />
         </b-row>
@@ -134,7 +134,6 @@ import SearchModal from '@/components/SearchModal'
 
 export default {
   name: 'sao-header',
-  props: ['user'],
   data () {
     return {
       // aviData: [{icon: ['far', 'user'], text: 'My Profile', link: '/profile'}, {icon: ['far', 'envelope'], text: 'Inbox'}, {icon: 'cog', text: 'Settings', link: '/settings'}, {icon: 'power-off', text: 'Logout', link: '/Logout', click: () => { this.$emit('logout') }}],
@@ -151,7 +150,7 @@ export default {
     // }
   },
   computed: {
-    ...mapState(['time']),
+    ...mapState(['time', 'authUser']),
     // displayedNotes () {
     //   const listed = Array.from(this.user.notifications)
     //   return listed.slice(0, 6)

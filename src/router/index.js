@@ -4,7 +4,7 @@ import Dashboard from '@/components/Dashboard'
 import Notifications from '@/components/Notifications'
 import NotificationsForm from '@/components/NotificationsForm'
 import ErrPage500 from '@/components/ErrPage500'
-import NewForm from '@/apps/eventCollab/EventCollab'
+import EventForm from '@/apps/eventCollab/EventCollab'
 import Viewer from '@/apps/eventViewer/Viewer'
 
 Vue.use(Router)
@@ -56,8 +56,9 @@ export default new Router({
     },
     {
       path: '/form',
-      name: 'New Form',
-      component: NewForm
+      name: 'Event Form',
+      component: EventForm,
+      props: true
     },
     {
       path: '/resource*',
