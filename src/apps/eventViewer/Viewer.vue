@@ -1,5 +1,5 @@
 <template>
-    <b-container id="display" fluid>
+    <b-container id="" fluid>
     	
       <viewer :title="title" />
     </b-container>

@@ -1,21 +1,6 @@
 <template>
   <div id="main-content">
-    <b-row class="">
-      <b-col cols="12">
-        <h4 class="">Your Upcoming Events</h4>
-      </b-col>
-      <b-col sm="6" lg="3" v-for="(event, i) of upcomingEvents" :key="i">
-        <b-card class="shadow-sm upcoming-events" :bg-variant="bgColor(i)" :text-variant="txtColor(i)"  @mouseover="hoverFocus = i" @mouseout="hoverFocus = null" :class="{'shadow-lg': hoverFocus === i}">
-          <b-row class="ml-3">
-            <h3 class="pl-3">{{time(event.startRange).format('DD')}}</h3>
-            <b-col cols=""><p class="event-text" :class="{'text-dark': hoverFocus !== i}">{{time(event.startRange).format("MMM YYYY")}}<br><span :class="{'text-secondary': hoverFocus !== i}">{{time(event.startRange).format("hh:mm a")}}</span></p></b-col>
-          </b-row>
-          <b-row class="ml-3">
-            <b-col :class="{'text-secondary': hoverFocus !== i}"><p>{{event.name}}</p></b-col>
-          </b-row>
-        </b-card>
-      </b-col>
-    </b-row>
+    <upcoming-events :upcoming="upcomingEvents" title="Your Upcoming Events" />
 
     <b-row>
       <b-col md="12" xl="9" class="accordionCol" order-xl="1" order="2">
@@ -120,18 +105,22 @@
           </b-card>
             </b-col>
           </b-row>
-<!--           <b-card class="shadow-sm">
+          
+          <transition name="compress" mode="out-in">
+            <b-button block v-if="filtersEnabled" variant="secondary4" key="filEn" :pressed.sync="filtersEnabled">Disable</b-button>
+            <b-button block v-if="!filtersEnabled" variant="outline-secondary4" key="filDis" :pressed.sync="filtersEnabled">Enable</b-button>
+          </transition>
+        </b-card>
+
+           <b-card class="shadow-sm">
           <b-form-group class="card-text" label="Week Selector">
             <date-picker ref="datePicker" :value="formatCurrentDate()" @input="updateDate($event)" />
           </b-form-group>
-          </b-card>
- -->
-
           <transition name="compress" mode="out-in">
-            <b-button block v-if="filtersEnabled" variant="secondary4" key="filEn" :pressed.sync="filtersEnabled">Disable</b-button>
-            <b-button block v-if="!filtersEnabled" variant="outline-secondary4" key="filDis" :pressed.sync="filtersEnabled" @click="updateDate($refs.datePicker.$el.value)">Enable</b-button>
+            <b-button block v-if="weekFilter.enabled" variant="secondary4" key="weekEn" :pressed.sync="weekFilter.enabled">Disable</b-button>
+            <b-button block v-if="!weekFilter.enabled" variant="outline-secondary4" key="weekDis" :pressed.sync="weekFilter.enabled" @click="updateDate($refs.datePicker.$el.value)">Enable</b-button>
           </transition>
-        </b-card>
+          </b-card>
 
       </b-col>
 
@@ -150,10 +139,10 @@
 import { mapState } from 'vuex'
 import EventView from './EventView'
 import CollapseInput from './helpers/CollapseInput'
+import UpcomingEvents from '@/assets/vue/UpcomingModal'
 import EventsAccordion from './EventsAccordion'
 import LoaderWindow from './LoaderWindow.vue'
 import DatePicker from './DatePicker.vue'
-// let Color = require('Color')
 import _ from 'lodash'
 
 export default {
@@ -161,7 +150,6 @@ export default {
   // props: ['title', 'time'],
   data () {
     return {
-      hoverFocus: null,
       upcomingEvents: [],
       // msg: console.log(this),
       events: [],
@@ -182,16 +170,17 @@ export default {
       endDate1: '',
       searchTitle: '',
       filtersEnabled: false,
+      weekFilter: { enabled: false, filter: { 'dat': {'evaluate': x => x.occurrences.some(o => new Date(o.startDate) >= new Date(this.startDate1) && new Date(o.startDate) < new Date(this.endDate1))} } },
       filters: {
         'aud': {'evaluate': x => this.selectedAudiences.includes(x.audience)},
         'dep': {'evaluate': x => this.selectedDepartments.includes(x.department)},
         'cat': {'evaluate': x => this.selectedCategories.includes(x.category)}
-        // 'dat': {'evaluate': x => x.occurrences.some(o => new Date(o.startDate) >= new Date(this.startDate1) && new Date(o.startDate) < new Date(this.endDate1))}
       },
       isLoading: false
     }
   },
   components: {
+    UpcomingEvents,
     EventView,
     CollapseInput,
     EventsAccordion,
@@ -204,11 +193,39 @@ export default {
   computed: {
     ...mapState(['time']),
     filteredEvents () {
-      if (this.filtersEnabled) {
+      if (this.weekFilter.enabled & this.filtersEnabled === false) {
+        console.log('make way')
+        return this.events.filter(x => {
+          for (let filter in this.weekFilter.filter) {
+            if (!this.weekFilter.filter[filter].evaluate(x)) {
+              return false
+            }
+          }
+          return x.name.toLowerCase().includes(this.searchTitle.toLowerCase()) || x.theme.toLowerCase().includes(this.searchTitle.toLowerCase())
+        })
+      }
+      if (this.filtersEnabled & this.weekFilter.enabled === false) {
         return this.events.filter(x => {
           for (let filter in this.filters) {
             if (!this.filters[filter].evaluate(x)) {
               return false
+            }
+          }
+          return x.name.toLowerCase().includes(this.searchTitle.toLowerCase()) || x.theme.toLowerCase().includes(this.searchTitle.toLowerCase())
+        })
+      }
+      if (this.filtersEnabled & this.weekFilter.enabled) {
+        return this.events.filter(x => {
+          for (let filter in this.filters) {
+            if (!this.filters[filter].evaluate(x)) {
+              return false
+            }
+          }
+          if (this.weekFilter.enabled) {
+            for (let filter in this.weekFilter.filter) {
+              if (!this.weekFilter.filter[filter].evaluate(x)) {
+                return false
+              }
             }
           }
           return x.name.toLowerCase().includes(this.searchTitle.toLowerCase()) || x.theme.toLowerCase().includes(this.searchTitle.toLowerCase())
@@ -253,6 +270,11 @@ export default {
       if (!val) {
         this.accordianIndex = -1
       }
+    },
+    weekFilter: function (val) {
+      if (!val) {
+        this.accordianIndex = -1
+      }
     }
   },
   methods: {
@@ -261,19 +283,6 @@ export default {
     },
     toggleAllCat (checked) {
       this.selectedCategories = checked ? this.categories.slice() : []
-    },
-    txtColor (i) {
-      if (this.hoverFocus === i) {
-        return 'white'
-      }
-      if (i % 2 === 0) {
-        return 'success'
-      } else { return 'secondary4' }
-    },
-    bgColor (i) {
-      if (this.hoverFocus === i) {
-        return 'prime2'
-      }
     },
     formatCurrentDate (date) {
       let d = new Date(Date.now())
@@ -365,21 +374,13 @@ export default {
           this.upcomingEvents.push(event)
         }
       }
-      this.upcomingEvents.reverse()
+      // this.upcomingEvents.reverse()
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.event-text{
-  
-  margin-bottom: 5px;
-}
-p{
-  font-size: .8rem;
-  /*margin-bottom: 60px;*/
-}
 $bootstrapMd: 768px;
 .searchCol{
   @media(min-width: $bootstrapMd) {
@@ -429,11 +430,6 @@ $bootstrapMd: 768px;
   opacity: 0;
 }
 
-.upcoming-events{
-  &:hover{
-    background-color: danger;
-  }
-}
 
 #main-content {
   padding-bottom: 70px;

@@ -1,13 +1,12 @@
 <template>
-  <b-container id="display" fluid>
-    <div id="main-content">
+  <b-container id="" fluid>
     <h1>{{title}}</h1>
 
     <b-row >
-        <b-col v-for="(note, i) of authUser.notifications" :key="i" cols="12" sm="6">
-            <b-card class="shadow-sm" :title="note.title" title-tag="h3">
+        <b-col v-for="(note, i) of notifications" :key="i" cols="12" sm="6">
+            <b-card class="shadow-sm" :title="note.title" title-tag="h3" @mouseover="hoverFocus = i" @mouseout="hoverFocus = null" :class="{'shadow-lg': hoverFocus === i}">
                     <p class="card-text">{{note.description}}</p>
-                    <p class="card-text">{{new Date(note.created_on).toLocaleDateString()}} {{new Date(note.created_on).toLocaleTimeString()}}</p>
+                    <p class="card-text">{{time(note.created_on).format("lll")}}</p>
             </b-card>
         </b-col>
         <!-- <b-col cols="12" sm="6">
@@ -18,18 +17,23 @@
             </b-card>
         </b-col> -->
     </b-row>
-    </div>
   </b-container>
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex'
 export default {
   name: 'Notifications',
-  props: { authUser: Object },
+  // props: { authUser: Object },
   data () {
     return {
+      hoverFocus: null,
       title: 'Notifications'
     }
+  },
+  computed: {
+    ...mapGetters(['notifications']),
+    ...mapState(['time'])
   }
 }
 </script>

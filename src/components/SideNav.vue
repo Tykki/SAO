@@ -21,17 +21,17 @@
                 </small>
             </b-nav-item>
 
-            <b-nav-item to="/dashboard" @click="setNav('a', null)" :class="{active: navSet.active === `a`}" class="blink">
+            <b-nav-item ref="dashboard" to="/dashboard" @click="setNav('a', null)" :class="{active: navSet.active === `a`}" class="blink">
                 <icon icon="tachometer-alt" size="lg" class="nav-icon" /><strong>Dashboard</strong>
             </b-nav-item>
             
-            <div v-for="(group, i) of resources" :key="`g${i}`">
+            <div v-for="(group, i) of resGroups" :key="`g${i}`">
               <b-nav-item @click="setNav(null, null)" :class="{active: navSet.parent === `${i}`}" :id="`rG${i}`" data-toggle="collapse" :data-target="`#gR${i}`" class="collapsed">
                   <icon :icon="group.icon" size="lg" class="nav-icon" /><strong :id="`rName${i}`">{{group.name}}<icon icon="angle-down" size="lg" class="arrow-down" /></strong>
               </b-nav-item>
 
-              <ul class="sub-menu collapse" :ref="`test${i}`" :id="`gR${i}`">
-                  <b-nav-item @click="setNav(`${i}-${r}`, `${i}`)" v-for="(resource, r) of group.resources" :key="r" class="" :class="{active: navSet.active === `${i}-${r}`}"><b-link :to="`/resource${i}-${r}`"><icon icon="angle-right" style="font-weight: 900;" transform="right-12" /><strong :id="`rLink${i}`" style="margin-left: 15px;">{{resource.name}}</strong></b-link></b-nav-item>
+              <ul class="sub-menu collapse" :id="`gR${i}`">
+                  <b-nav-item v-for="(resource, r) of group.resources" :key="r" @click="setNav(`${i}-${r}`, `${i}`, $event)" :href="resource.isExternal ? resource.url : '#'" class="" :class="{active: navSet.active === `${i}-${r}`}" target="_blank" ><icon icon="angle-right" style="font-weight: 900;" transform="right-12" /><strong :id="`rLink${i}`" style="margin-left: 15px;">{{resource.name}}</strong></b-nav-item>
               </ul>
             </div>
 
@@ -43,13 +43,18 @@
                 </small>
             </b-nav-item>
 
-            <b-nav-item to="/viewer" @click="setNav('b', null)" :class="{active: navSet.active === `b`}" class="blink">
-              <icon icon="rocket" size="lg" class="nav-icon" /><strong>Events Viewer</strong>
+            <b-nav-item ref="events" to="/viewer" @click="setNav('b', null)" :class="{active: navSet.active === `b`}" class="blink">
+              <icon icon="calendar-alt" size="lg" class="nav-icon" /><strong>Events Viewer</strong>
+            </b-nav-item>
+            
+
+            <b-nav-item ref="posts" to="/notifications-form" @click="setNav('c', null)" :class="{active: navSet.active === `c`}" class="blink">
+              <icon icon="comment" size="lg" class="nav-icon" /><strong>Posts</strong>
             </b-nav-item>
             
             <hr/>
             
-            <b-nav-item to="/Logout" @click="setNav('c', null), logoutReq()" :class="{active: navSet.active === `c`}" class="blink">
+            <b-nav-item to="/Logout" @click="setNav('z', null), logoutReq()" :class="{active: navSet.active === `z`}" class="blink">
                     <icon icon="power-off" size="lg" class="nav-icon" /><strong>Logout</strong>
             </b-nav-item>
         </ul>
@@ -61,9 +66,10 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'sideNav',
-  props: ['resources'],
+  // props: ['resources'],
   data () {
     return {
       navSet: {active: 'a', parent: null}
@@ -75,7 +81,7 @@ export default {
     logoutReq () {
       this.$emit('logout')
     },
-    setNav (data, i) {
+    setNav (data, i, event) {
       // console.log(data, i, this)
       if (i === null) {
         let subM = $('.sub-menu')
@@ -84,14 +90,30 @@ export default {
       if (data === null) {
         return
       }
+      // console.log(this, data, i, event)
       this.navSet.active = data
       this.navSet.parent = i
-      if (typeof data === 'string') {
-        if (data.match(/^[A-Za-z]+$/)) {
-          let ix = data.charCodeAt() - 97
-          this.$children[ix].$el.click()
-        }
+      if (data === 'a') {
+        this.$refs.dashboard.children[0].click()
       }
+      if (data === 'b') {
+        this.$refs.events.children[0].click()
+      }
+      if (data === 'c') {
+        this.$refs.posts.children[0].click()
+      }
+      if (i !== null) {
+        event.toElement.firstChild.click()
+      }
+      // console.log(this)
+      // if (typeof data === 'string') {
+      //   console.log(data)
+      //   if (data.match(/^[A-Za-z]+$/)) {
+      //     let ix = data.charCodeAt() - 97
+      //     console.log(ix)
+      //     this.$children[ix].$el.click()
+      //   }
+      // }
     },
     iconNavShow (data) {
       // console.log(this, data)
@@ -186,7 +208,8 @@ export default {
       }
     }
   },
-  watch: {
+  computed: {
+    ...mapGetters(['resGroups'])
   }
 }
 </script>

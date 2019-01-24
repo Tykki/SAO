@@ -1,6 +1,6 @@
 <template>
-  <b-container fluid id="display">
-    <event-form :title="title" @reqOccurCheck="checkOccur"/>
+  <b-container fluid id="">
+    <event-form @reqOccurCheck="checkOccur" @reqClearConflicts="clearConflicts" />
     <conflict-list :occur="occur"/>
   </b-container>
 </template>
@@ -21,6 +21,9 @@
       'conflict-list': conflictList
     },
     methods: {
+      clearConflicts () {
+        this.occur = []
+      },
       checkOccur (ocr) {
         this.occur = ocr
       }

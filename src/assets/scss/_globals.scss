@@ -100,19 +100,20 @@ body{
 	background-color: $backgroundColor;
 }
 
-#main-content {
-  /*max-width: 1354px;*/
-  margin: auto;
-}
-
 a {
   color: $navLink;
+}
+
+form label{
+  font-weight: bold;
 }
 
 #avatar{
   display: none;
 }
+
 .card{
+  margin-bottom: 15px;
   border: none !important;
 }
 .fa-power-off{

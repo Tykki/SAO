@@ -1,7 +1,7 @@
 <template>
   <!-- <list-item></list-item> -->
   <div>
-    <h4 v-show="this.conflict">Conflict List</h4>
+    <h4 v-if="conflicts">Conflict List</h4>
   <b-list-group id="conflictList">
     <b-list-group-item class="conflictItem" v-for="(conflict, i) in conflicts" :key="i" href="#" variant="light">
       <h4>
@@ -32,7 +32,7 @@ export default {
   props: ['occur'],
   data () {
     return {
-      conflicts: []
+      conflicts: undefined
     }
   },
   // created () {
@@ -53,7 +53,7 @@ export default {
       this.conflicts = []
       for (let match of this.occur) {
         console.log(match)
-        fetch(`https://websrvcs.sa.uic.edu/api/sao/events/?token=${this.$store.state.authUser.token}&startDate=${match.startDate}&endDate=${match.endDate}`).then(res => res.json()).then(res => {
+        fetch(`https://websrvcs.sa.uic.edu/api/sao/events/?token=${this.$store.state.authUser.token}&startDate=${match.startDate}&endDate=${match.endDate}&location=${match.locationID ? match.locationID : match.location}`).then(res => res.json()).then(res => {
           $.each(res, (i, v) => {
             // console.log(i, v)
             this.conflicts.push(v)

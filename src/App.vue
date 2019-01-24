@@ -7,7 +7,7 @@
     <section v-else>
       <sao-header @logout="Reqlogout()" />
       <side-nav @logout="Reqlogout()" />
-      <router-view />
+      <router-view id="display" />
       <sao-footer />
     </section>
   </div>
@@ -55,6 +55,11 @@ export default {
     this.webSocket()
   },
   watch: {
+    token () {
+      if (this.token === null || this.token === undefined) {
+        console.log('You have no Token fam')
+      }
+    }
   },
   computed: {
     ...mapGetters(['token'])
@@ -86,6 +91,8 @@ export default {
     // time () { return moment },
     Reqlogout () {
       // this.authUser.token = null
+      console.log(this)
+      this.$store.commit('KILL_TOKEN')
       localStorage.removeItem('token')
       this.$router.push('Logout')
     }

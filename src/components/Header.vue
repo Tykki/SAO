@@ -42,8 +42,8 @@
     
   <b-popover target="aviClick" triggers="click blur" placement="bottom" ref="popoverAvi" >
     <b-list-group flush>
-      <b-list-group-item variant="prime2" :to="data.link ? data.link : '#'" v-for="(data, i) of aviData" :key="i">
-        <p><icon @click="data.click ? data.click : console.log('nuts')" class="aviIcon" :icon="data.icon" :class="{power: data.icon === 'power-off'}" /> {{data.text}}</p>
+      <b-list-group-item variant="prime2" @click="data.click" v-for="(data, i) of aviData" :key="i">
+        <p><icon class="aviIcon" :icon="data.icon" :class="{power: data.icon === 'power-off'}" /> {{data.text}}</p>
       </b-list-group-item>
     </b-list-group>
   </b-popover>
@@ -53,7 +53,7 @@
       <b-list-group-item id="show-all-notes" class="noteItem" variant="prime2" href="#" >
         <b-row align-h="between">
           <b-col cols="8">
-            <p><strong>Notifications</strong></p>
+            <p><strong>Announcements</strong></p>
           </b-col>
           <b-col cols="">
             <b-link to="/notifications">View All</b-link>
@@ -66,16 +66,16 @@
         </b-row> -->
         <b-row>
           <b-col cols="1" align-self="center">
-            <icon class="noteIcon" icon="rocket" :class="" />
+            <icon class="noteIcon" icon="comments" :class="" />
           </b-col>
           <b-col style="padding: 0 5px 0 15px;">
-            <p><strong>{{notes.title}}</strong>
-              {{notes.description}}<br />
+            <p><strong>{{notes.title}}</strong> <br />
+              {{notes.description | truncate(90)}}<br />
               <small>{{time(notes.created_on).fromNow()}}</small>
             </p>
           </b-col>
           <b-col class="dismiss-note" cols=".5" style="margin-top: -10px;">
-          <icon icon="times" />
+          <!-- <icon icon="times" /> -->
         </b-col>
         </b-row>
       </b-list-group-item>
@@ -130,14 +130,14 @@
 
 <script>
 import { mapState } from 'vuex'
-import SearchModal from '@/components/SearchModal'
+import SearchModal from '@/assets/vue/SearchModal'
 
 export default {
   name: 'sao-header',
   data () {
     return {
       // aviData: [{icon: ['far', 'user'], text: 'My Profile', link: '/profile'}, {icon: ['far', 'envelope'], text: 'Inbox'}, {icon: 'cog', text: 'Settings', link: '/settings'}, {icon: 'power-off', text: 'Logout', link: '/Logout', click: () => { this.$emit('logout') }}],
-      aviData: [{icon: 'power-off', text: 'Logout', link: '/Logout', click: () => { console.log('not cool') }}],
+      aviData: [{icon: 'power-off', text: 'Logout', link: '/Logout', click: () => { this.$emit('logout') }}],
       resourceSearch: ''
     }
   },

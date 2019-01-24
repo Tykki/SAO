@@ -1,25 +1,7 @@
 <template>
-  <b-container id="display" fluid>
-
-    <div id="main-content">
-        
-    <b-row class="">
-      <b-col cols="12">
-        <h4 class="">Important Announcements</h4>
-      </b-col>
-      <b-col sm="6" lg="3" v-for="(notes, i) of authUser.notesPriority" :key="i">
-        <b-card class="shadow-sm upcoming-events" :bg-variant="bgColor(i)" :text-variant="txtColor(i)"  @mouseover="meetingFocus = i" @mouseout="meetingFocus = null" :class="{'shadow-lg': meetingFocus === i}">
-          <b-row class="ml-3">
-            <h3 class="pl-3">{{time(notes.created_on).format("DD")}}</h3>
-            <b-col cols=""><p class="" :class="{'text-dark': meetingFocus !== i}">{{notes.title | truncate(20)}}<br><!-- <span v-if="notes.link" :class="{'text-secondary': meetingFocus !== i}">{{notes.link}}</span> --></p></b-col>
-          </b-row>
-          <b-row class="ml-3">
-            <b-col class="" :class="{'text-secondary': meetingFocus !== i}"><p>{{notes.description | truncate(23)}}</p></b-col>
-          </b-row>
-        </b-card>
-      </b-col>
-      
-    </b-row>
+  <b-container id="" fluid>
+     <important-posts title="Important Announcements" :upcoming="authUser.notesPriority" />
+    
     <b-row >
 
         <b-col lg="8">
@@ -27,7 +9,7 @@
               <b-list-group>
                 <b-list-group-item v-for="(event, i) of proDev" :key="i" button>
                   <b-row>
-                    <b-col>
+                    <b-col v-b-toggle="`detail${i}`">
                       <span>{{event.name}}</span><br/>
                       <small class="text-secondary"><b>{{time(event.occurrences[0].startDate).format("DD MMM YYYY")}}, {{event.occurrences[0].location}}</b></small>
                     </b-col>
@@ -35,6 +17,9 @@
                       <b-btn class="proDevBtn text-white" size="sm" :variant="btnColor(i)">Sign Up</b-btn>
                     </b-col>
                   </b-row>
+                <b-collapse :id="`detail${i}`" accordion="proDev">
+                  <event-view :event="event" :proDev="true" />
+                </b-collapse>
                   
                 </b-list-group-item>
               </b-list-group>
@@ -53,14 +38,12 @@
                     </b-col>
                 </b-row>
             </b-card>
-            
-            
 
         </b-col>
         <b-col lg="4">
             <b-card  class="shadow-sm text-center text-prime2">
               <img class="mb-3" id="saTechBanner" src="./../assets/saTechBanner.png" alt="Student Affairs Technology Banner"><br/>
-              <b-btn class="mb-3" href="https://saservice.uic.edu" target="_blank" variant="outline-prime2">Service Request</b-btn><br/>
+              <b-btn class="mb-3" href="http://saservice.uic.edu" target="_blank" variant="outline-prime2">Service Request</b-btn><br/>
               <icon class="mr-3" id="saTechPhone" icon="phone" /><span class="ml-3 text-dark">(312) 413-5135 </span>
             </b-card>
                 
@@ -78,21 +61,20 @@
     </b-row>
 
     
-    </div>
   </b-container>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import notifications from './Notifications'
+import EventView from '@/apps/eventViewer/components/EventView'
+import ImportantPosts from '@/assets/vue/UpcomingModal'
 export default {
   name: 'Dashboard',
   // props: { authUser: Object, time: function },
-  components: { 'notifications': notifications },
+  components: { EventView, ImportantPosts },
   data () {
     return {
       title: 'Welcome,',
-      meetingFocus: null,
       newsFocus: null,
       mediaIcons: [
         {name: 'facebook-f', text: 'UIC Life on Facebook', color: 'fbBlue', link: 'https://www.facebook.com/UIClife/'},
@@ -125,19 +107,6 @@ export default {
       if (i === 1) {
         return 'prime2'
       } else { return 'warning' }
-    },
-    txtColor (i) {
-      if (this.meetingFocus === i) {
-        return 'white'
-      }
-      if (i % 2 === 0) {
-        return 'success'
-      } else { return 'secondary4' }
-    },
-    bgColor (i) {
-      if (this.meetingFocus === i) {
-        return 'prime2'
-      }
     }
   }
 }

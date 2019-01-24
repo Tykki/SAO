@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import router from './router'
 import jwt from 'jsonwebtoken'
 import pub from '../static/JWT_SIGNING_KEY.pub'
 import moment from 'moment'
@@ -8,7 +9,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    authUser: { notifications: [], notesDisplayed: [], notesUnseen: 0, notesPriority: [] },
+    authUser: { resourceGroups: [], notifications: [], notesDisplayed: [], notesUnseen: 0, notesPriority: [], token: null },
     formInputs: {
       event: {
         audiences: [],
@@ -19,19 +20,45 @@ export default new Vuex.Store({
       },
       notes: {}
     },
+    hoverPack: {
+      hoverFocus: null,
+      txtColor (i) {
+        if (this.hoverFocus === i) {
+          return 'white'
+        }
+        if (i % 2 === 0) {
+          return 'success'
+        } else { return 'secondary4' }
+      },
+      bgColor (i) {
+        if (this.hoverFocus === i) {
+          return 'prime2'
+        }
+      }
+    },
     time (data) { return moment(data) }
   },
   getters: {
+    token (state) {
+      return state.authUser.token
+    },
+    resGroups (state) {
+      return state.authUser.resourceGroups
+    },
     eventInputs (state) {
       return state.formInputs.event
     },
-    token (state) {
-      return state.authUser.token
+    notifications (state) {
+      return state.authUser.notifications
     }
   },
   mutations: {
     SAVE_TOKEN (state, token) {
       state.authUser.token = token
+    },
+    KILL_TOKEN (state) {
+      state.authUser.token = null
+      console.log(state.authUser.token)
     },
     BUILD_USER (state) {
       fetch(`https://websrvcs.sa.uic.edu/api/sao/announcements/?since=2018-08-08&token=${state.authUser.token}`).then(res => res.json()).then((data) => {
@@ -63,7 +90,16 @@ export default new Vuex.Store({
         if (err) {
           // console.log('Aww Snap Son! =[')
           console.error(err)
-          return state.$router.replace('500')
+          if (err.name === 'TokenExpiredError') {
+            localStorage.removeItem('token')
+            console.log(localStorage.getItem('token'))
+          }
+          if (err.name === 'JsonWebTokenError') {
+            localStorage.removeItem('token')
+            console.log(localStorage.getItem('token'))
+            console.log(router)
+          }
+          return router.replace('500')
         }
         $.each(data, (i, v) => {
           // console.log(i, v)

@@ -3,28 +3,26 @@
     <b-container fluid>
       <b-row>
         <b-col>
-        <h2 align="left">{{event.name}}</h2>
-        <h5 align="left">{{event.description}}</h5>
+        <h2 v-if="!proDev" align="left">{{event.name}}</h2>
+        <h5 align="left" class="mt-3">{{event.description}}</h5>
         </b-col>
-        <b-col class="" cols="0">
+        <b-col v-if="!proDev" class="" cols="0">
           <b-btn variant="outline-secondary"><icon :icon="['far', 'edit']" @click="editEvent(event)" /></b-btn>
         </b-col>
       </b-row>
     </b-container>
     
     <hr/>
-    <b-badge v-if="event.status==='confirmed'" variant="success">
-      Confirmed
+    <b-badge :variant="event.status === 'confirmed' ? 'success' : 'danger'">
+      {{event.status}}
     </b-badge>
-    <b-badge v-else variant="danger">
-      {{event.statusText}}
-    </b-badge>
+    
 
 
     <br/> theme: {{event.theme}}
-    <br/> status: {{event.statusText}}
-    <br/> category: {{event.categoryText}}
-    <br/> audience: {{event.audienceText}}
+    <br/> status: {{event.status}}
+    <br/> category: {{event.category}}
+    <br/> audience: {{event.audience}}
     <br/> created by: {{event.created_by}}
     <br/> created on: {{new Date(event.created_on).toLocaleDateString()}} {{new Date(event.created_on).toLocaleTimeString()}}
     <hr/>
@@ -57,7 +55,8 @@ export default {
     }
   },
   props: {
-    event: Object
+    event: Object,
+    proDev: Boolean
   },
   computed: {
     ...mapGetters(['eventInputs'])
@@ -66,31 +65,44 @@ export default {
     'edit-btn': EditModal
   },
   mounted () {
-    this.numToNam()
+    // this.$set(this.event, 'locationText', [])
+    // this.numToNam()
   },
   methods: {
-    numToNam () {
-      this.eventInputs.audiences.filter(inp => {
-        if (this.event.audience === inp.value) {
-          this.$set(this.event, 'audienceText', inp.text)
-        }
-      })
-      this.eventInputs.categories.filter(inp => {
-        if (this.event.category === inp.value) {
-          this.$set(this.event, 'categoryText', inp.text)
-        }
-      })
-      this.eventInputs.departments.filter(inp => {
-        if (this.event.department === inp.value) {
-          this.$set(this.event, 'departmentText', inp.text)
-        }
-      })
-      this.eventInputs.status.filter(inp => {
-        if (this.event.status === inp.value) {
-          this.$set(this.event, 'statusText', inp.text)
-        }
-      })
-    },
+    // numToNam () {
+    //   this.eventInputs.audiences.filter(inp => {
+    //     if (this.event.audience === inp.value) {
+    //       this.$set(this.event, 'audienceText', inp.text)
+    //     }
+    //   })
+    //   this.eventInputs.categories.filter(inp => {
+    //     if (this.event.category === inp.value) {
+    //       this.$set(this.event, 'categoryText', inp.text)
+    //     }
+    //   })
+    //   this.eventInputs.departments.filter(inp => {
+    //     if (this.event.department === inp.value) {
+    //       this.$set(this.event, 'departmentText', inp.text)
+    //     }
+    //   })
+    //   this.eventInputs.status.filter(inp => {
+    //     if (this.event.status === inp.value) {
+    //       this.$set(this.event, 'statusText', inp.text)
+    //     }
+    //   })
+      // let numLoc = this.event.occurrences.map(occur => occur.location)
+      // console.log(numLoc)
+      // let test = this.eventInputs.locations.filter(inp => {
+      //   if (numLoc.filter(num => num === inp)) {
+      //     console.log(test)
+      //   }
+      // })
+      // this.eventInputs.locations.filter(inp => {
+      //   if (this.event.occurrences.map(occur => occur.location === inp.value)) {
+      //     this.event.locationText.push(inp.text)
+      //   }
+      // })
+    // },
     editEvent (event) {
       this.$router.push({name: 'Event Form', params: {event}})
     },

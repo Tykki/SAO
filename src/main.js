@@ -13,18 +13,20 @@ import 'bootstrap/dist/js/bootstrap.min.js'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon, FontAwesomeLayers, FontAwesomeLayersText } from '@fortawesome/vue-fontawesome'
-import { faRocket, faAngleDown, faAngleRight, faSignOutAlt, faBell, faAngleDoubleLeft, faBars, faTachometerAlt, faLink, faUser, faCog, faSuitcase, faHandshake,
-faChevronDown, faChevronRight, faCircleNotch, faSyncAlt, faChevronUp, faPlus, faMinus, faSync, faEnvelope, faPowerOff, faSearch, faTimes, faPhone } from '@fortawesome/free-solid-svg-icons'
+import { faRocket, faAngleDown, faAngleRight, faSignOutAlt, faBell, faAngleDoubleLeft, faBars, faTachometerAlt, faLink, faUser, faCog, faSuitcase, faHandshake, faChevronDown, faChevronRight, faCircleNotch, faSyncAlt, faChevronUp, faPlus, faMinus, faSync, faEnvelope, faPowerOff, faSearch, faTimes, faPhone, faComments, faTableTennis, faDesktop, faComment, faCalendarAlt } from '@fortawesome/free-solid-svg-icons'
 import {faEnvelope as farEnvelope, faUser as farUser, faEdit} from '@fortawesome/free-regular-svg-icons'
 import { faFacebookF, faTwitter, faYoutubeSquare } from '@fortawesome/free-brands-svg-icons'
 import 'jquery-ui/ui/widgets/datepicker'
 import 'jquery-ui/themes/base/core.css'
 import 'jquery-ui/themes/base/datepicker.css'
 import 'jquery-ui/themes/base/theme.css'
-library.add(faRocket, faSignOutAlt, faBell, faAngleDown, faAngleRight, faAngleDoubleLeft, faBars, faTachometerAlt, faLink, faUser, faCog, faSuitcase, faHandshake,
-faChevronDown, faChevronRight, faCircleNotch, faSyncAlt, faChevronUp, faPlus, faMinus, faSync, faEnvelope, farEnvelope, farUser, faPowerOff, faSearch, faTimes,
-faFacebookF, faTwitter, faYoutubeSquare, faPhone, faEdit)
+library.add(faRocket, faSignOutAlt, faBell, faAngleDown, faAngleRight, faAngleDoubleLeft, faBars, faTachometerAlt, faLink, faUser, faCog, faSuitcase, faHandshake, faChevronDown, faChevronRight, faCircleNotch, faSyncAlt, faChevronUp, faPlus, faMinus, faSync, faEnvelope, farEnvelope, farUser, faPowerOff, faSearch, faTimes, faFacebookF, faTwitter, faYoutubeSquare, faPhone, faEdit, faComments, faTableTennis, faDesktop, faComment, faCalendarAlt)
 Vue.filter('truncate', (str, length = 40) => { return (str.length <= length) ? str : `${str.substring(0, length - 3)}...` })
+Vue.filter('capitalize', (value) => {
+  if (!value) return ''
+  value = value.toString()
+  return value.charAt(0).toUpperCase() + value.slice(1)
+})
 Vue.component('icon', FontAwesomeIcon)
 Vue.component('icon-layers', FontAwesomeLayers)
 Vue.component('icon-layers-text', FontAwesomeLayersText)

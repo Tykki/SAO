@@ -1,7 +1,5 @@
 <template>
-  <b-container id="display" fluid>
-    <div id="main-content">
-      
+  <b-container id="" fluid>
     
     <h1>{{title}}</h1>
 
@@ -83,7 +81,7 @@
 
       </b-form>
     </b-card>
-</div>
+
   </b-container>
 </template>
 

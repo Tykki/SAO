@@ -7,28 +7,4 @@ the only class that has been changed in the bootstrap library is brand.
 @import "globals";
 @import "sideNav";
 
-#toggle-wrap{
-    /*width: 20px;*/
-    color: $navLink;
-    margin-right: 13px;
-    margin-left: 13px;
-    top: 15px;
-}
-
-#toggle-wrap.active {
-  color: $navAccentPrimary;
-}
-
-.card{
-  margin-bottom: 15px;
-}
-
-main{
-  margin-bottom: 50px;
-}
-
-form label{
-  font-weight: bold;
-}
-
 @import "node_modules/bootstrap/scss/bootstrap";

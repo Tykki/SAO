@@ -8,8 +8,17 @@
   header{
     display: none !important;
   }
+  
   #toggle-wrap{
+    /*width: 20px;*/
     display: none;
+    color: $navLink;
+    margin-right: 13px;
+    margin-left: 13px;
+    top: 15px;
+  }
+  #toggle-wrap.active {
+    color: $navAccentPrimary;
   }
   .nav-side-menu {
     position: relative;
