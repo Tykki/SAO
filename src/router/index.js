@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Dashboard from '@/components/Dashboard'
 import Notifications from '@/components/Notifications'
-// import Test from '@/assets/vue/UpcomingModal'
+import Test from '@/assets/vue/Test'
 import NotificationsForm from '@/components/NotificationsForm'
 import ErrPage500 from '@/components/ErrPage500'
 import EventForm from '@/apps/eventCollab/EventCollab'
@@ -45,11 +45,11 @@ export default new Router({
       name: 'Notifications',
       component: Notifications
     },
-    // {
-    //   path: '/test',
-    //   name: 'Test App',
-    //   component: Test
-    // },
+    {
+      path: '/test',
+      name: 'Test App',
+      component: Test
+    },
     {
       path: '/notifications-form',
       name: 'NotificationsForm',

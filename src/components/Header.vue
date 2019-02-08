@@ -60,7 +60,7 @@
           </b-col>
         </b-row>
       </b-list-group-item>
-      <b-list-group-item class="noteItem" variant="prime2" href="#" v-for="(notes, i) of authUser.notesDisplayed" :key="i">
+      <b-list-group-item class="noteItem" variant="prime2" href="#" v-for="(notes, i) of authUser.notesDisplayed" :key="i" @click="showModal(i, notes)">
         <!-- <b-row align-h="end" >
           <icon icon="times" />
         </b-row> -->
@@ -74,9 +74,6 @@
               <small>{{time(notes.created_on).fromNow()}}</small>
             </p>
           </b-col>
-          <b-col class="dismiss-note" cols=".5" style="margin-top: -10px;">
-          <!-- <icon icon="times" /> -->
-        </b-col>
         </b-row>
       </b-list-group-item>
       <!-- <b-list-group-item id="show-all-notes" class="noteItem" variant="prime2" to="/notifications" >
@@ -92,6 +89,9 @@
     </b-list-group>                  
   </b-popover>
 
+  <b-modal v-for="(notes, i) of authUser.notesDisplayed" :key="i" ok-only ok-title="Close" :ref="`postModal${i}`">
+    <post-view class="postModal" :post="notes" />
+  </b-modal>
   <!-- <b-popover target="messages" triggers="click blur" placement="bottom" ref="popoverMess" >
     <b-list-group flush>
       <b-list-group-item id="show-all-mess" class="messItem" variant="prime2" href="#" >
@@ -131,6 +131,7 @@
 <script>
 import { mapState } from 'vuex'
 import SearchModal from '@/assets/vue/SearchModal'
+import PostView from '@/assets/vue/PostView'
 
 export default {
   name: 'sao-header',
@@ -142,7 +143,8 @@ export default {
     }
   },
   components: {
-    'search-modal': SearchModal
+    'search-modal': SearchModal,
+    PostView
   },
   watch: {
     // resourceSearch (event) {
@@ -166,6 +168,10 @@ export default {
     reqSearch (event) {
       this.resourceSearch = event.target.value
       console.log(this.resourceSearch)
+    },
+    showModal (i) {
+      // console.log(this.$refs)
+      this.$refs[`postModal${i}`][0].show()
     }
   }
 }
@@ -192,6 +198,9 @@ export default {
   span{
   font-size: small;
   }
+}
+.postModal{
+  color: initial;
 }
   span{
     width: fit-content;

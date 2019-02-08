@@ -19,7 +19,7 @@
     
 
 
-    <br/> theme: {{event.theme}}
+    <span v-if="event.theme"><br/>theme: {{event.theme}}</span>
     <br/> status: {{event.status}}
     <br/> category: {{event.category}}
     <br/> audience: {{event.audience}}
@@ -31,11 +31,11 @@
         <b-tab v-for="(occur, index) in this.event.occurrences" v-bind:key="index" :title="new Date(occur.startDate).toLocaleDateString()">
           <div>
           building: {{occur.location}}<br/>
-          address: {{occur.address}}<br/>
+          <span v-if="event.address">address: {{occur.address}}<br/></span>
           starts: {{new Date(occur.startDate).toLocaleString()}}<br/>
           ends: {{new Date(occur.endDate).toLocaleString()}}<br/>
-          last updated: {{new Date(occur.updated_on).toLocaleString()}}<br/>
-          info: {{occur.note}}
+          last updated: {{new Date(occur.updated_on).toLocaleString()}}
+          <span v-if="event.note"><br/>info: {{occur.note}}</span>
           </div>
         </b-tab>
       </b-tabs>

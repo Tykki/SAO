@@ -45,8 +45,18 @@
 
         <hr />
 
+        <b-card class="shadow-sm">
+          <b-form-group class="card-text" label="Week Selector">
+            <date-picker ref="datePicker" :value="formatCurrentDate()" @input="updateDate($event)" />
+          </b-form-group>
+          <transition name="compress" mode="out-in">
+            <b-button block v-if="weekFilter.enabled" variant="secondary4" key="weekEn" :pressed.sync="weekFilter.enabled">Disable</b-button>
+            <b-button block v-if="!weekFilter.enabled" variant="outline-secondary4" key="weekDis" :pressed.sync="weekFilter.enabled" @click="updateDate($refs.datePicker.$el.value)">Enable</b-button>
+          </transition>
+          </b-card>
+
         <collapse-input class="shadow-sm" title="Search">
-          <b-input-group >
+          <b-input-group>
             <b-form-input v-model="searchTitle" v-b-tooltip.focus="'Just start typing to search by title or theme'" v-b-tooltip.hover="'Just start typing to search by title or theme'"></b-form-input>
           </b-input-group>
         </collapse-input>
@@ -57,10 +67,13 @@
           <b-row>
             <b-col>
               <b-card class="shadow-sm">
-              <b-form-group class="card-text" label="Audience">
+                <p slot="header" class="w-100 mb-0" v-b-toggle.colAud aria-label="Audience">Audience<p slot="header" class="w-100 mb-0 text-right text-muted" v-b-toggle.colAud><small>(click to toggle)</small></p>
+                <b-collapse id="colAud">
+              <b-form-group class="card-text">
                 <b-form-checkbox-group stacked button-variant="prime2" v-model="selectedAudiences" name="audienceCheckboxes" :options="audiences">
                 </b-form-checkbox-group>
               </b-form-group>
+              </b-collapse>
               </b-card>  
             </b-col>
           </b-row>
@@ -68,7 +81,9 @@
           <b-row>
             <b-col cols="12" sm="6" xl="12">
               <b-card class="shadow-sm">
-              <b-form-group class="card-text" label="Departments">
+                <p slot="header" class="w-100 mb-0" v-b-toggle.colDep aria-label="Departments">Departments<p slot="header" class="w-100 mb-0 text-right text-muted" v-b-toggle.colDep><small>(click to toggle)</small></p>
+                <b-collapse id="colDep">
+              <b-form-group class="card-text">
                 <b-form-checkbox
                 v-model="allSelected.departments"
                 :indeterminate="allSelected.depInt"
@@ -81,6 +96,7 @@
                 <b-form-checkbox-group id="selectedDepartments" stacked v-model="selectedDepartments" name="departmentCheckboxes" :options="departments">
                 </b-form-checkbox-group>
               </b-form-group>
+                </b-collapse>
               </b-card>
               
             </b-col>
@@ -89,7 +105,9 @@
             <b-col cols="12" sm="6" xl="12">
               
           <b-card class="shadow-sm">
-          <b-form-group class="card-text" label="Categories">
+            <p slot="header" class="w-100 mb-0" v-b-toggle.colCat aria-label="Categories">Categories<p slot="header" class="w-100 mb-0 text-right text-muted" v-b-toggle.colCat><small>(click to toggle)</small></p>
+            <b-collapse id="colCat">
+          <b-form-group class="card-text">
             <b-form-checkbox
                 v-model="allSelected.categories"
                 :indeterminate="allSelected.cateInt"
@@ -102,6 +120,7 @@
             <b-form-checkbox-group id="selectedCategories" stacked v-model="selectedCategories" name="categoriesCheckboxes" :options="categories">
             </b-form-checkbox-group>
           </b-form-group>
+          </b-collapse>
           </b-card>
             </b-col>
           </b-row>
@@ -111,16 +130,6 @@
             <b-button block v-if="!filtersEnabled" variant="outline-secondary4" key="filDis" :pressed.sync="filtersEnabled">Enable</b-button>
           </transition>
         </b-card>
-
-           <b-card class="shadow-sm">
-          <b-form-group class="card-text" label="Week Selector">
-            <date-picker ref="datePicker" :value="formatCurrentDate()" @input="updateDate($event)" />
-          </b-form-group>
-          <transition name="compress" mode="out-in">
-            <b-button block v-if="weekFilter.enabled" variant="secondary4" key="weekEn" :pressed.sync="weekFilter.enabled">Disable</b-button>
-            <b-button block v-if="!weekFilter.enabled" variant="outline-secondary4" key="weekDis" :pressed.sync="weekFilter.enabled" @click="updateDate($refs.datePicker.$el.value)">Enable</b-button>
-          </transition>
-          </b-card>
 
       </b-col>
 
@@ -278,6 +287,9 @@ export default {
     }
   },
   methods: {
+    test () {
+      console.log('test')
+    },
     toggleAllDep (checked) {
       this.selectedDepartments = checked ? this.departments.slice() : []
     },
@@ -382,6 +394,9 @@ export default {
 
 <style lang="scss" scoped>
 $bootstrapMd: 768px;
+div.card-header{
+  display: inline-flex;
+}
 .searchCol{
   @media(min-width: $bootstrapMd) {
     padding-left:20px;

@@ -1,7 +1,7 @@
 <template>
   <b-container fluid id="">
-    <event-form @reqOccurCheck="checkOccur" @reqClearConflicts="clearConflicts" />
-    <conflict-list :occur="occur"/>
+    <event-form @reqOccurCheck="checkOccur" @reqClearConflicts="clearConflicts" :ocrErrLog="occurErrLog" />
+    <conflict-list @ocrErr="sendOcrErr" @noErr="clearOcrErr" :occur="occur"/>
   </b-container>
 </template>
 
@@ -13,7 +13,8 @@
     name: 'Event-Collab',
     data () {
       return {
-        occur: []
+        occur: [],
+        occurErrLog: {}
       }
     },
     components: {
@@ -26,6 +27,12 @@
       },
       checkOccur (ocr) {
         this.occur = ocr
+      },
+      sendOcrErr (err) {
+        this.occurErrLog = Object.assign(err)
+      },
+      clearOcrErr () {
+        this.occurErrLog = Object.assign({}, {messages: 0})
       }
     }
   }

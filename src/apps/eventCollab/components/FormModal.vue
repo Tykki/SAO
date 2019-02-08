@@ -206,7 +206,7 @@
       editOccur (id, occur) {
         this.$refs.formModal.show()
         // this.modalData = this.$parent.formData.occurrences[id]
-        this.modalData = Object.assign({}, occur, {startDate: occur.strt, endDate: occur.fin, upId: id, location: occur.locationID ? occur.locationID : occur.location})
+        this.modalData = Object.assign({}, occur, {startDate: occur.strt, endDate: occur.fin, upId: id})
         this.edit = true
         this.clearErrMsgs()
         console.log(this.modalData, id)

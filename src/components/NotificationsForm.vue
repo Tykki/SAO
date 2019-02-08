@@ -28,7 +28,7 @@
                       label-cols="1"
                       label="Audience:"
                       label-for="audience"> <!-- make breakpoints for better use of horizontal view -->
-              <b-form-select required id="audience" v-model="formData.audience" :options="['staff', 'students']" />
+              <b-form-select required id="audience" v-model="formData.audience" :options="['Staff', 'Students']" />
             <b-form-invalid-feedback>Please Select an Audience</b-form-invalid-feedback>
             </b-form-group>
           </b-col>

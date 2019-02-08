@@ -6,7 +6,7 @@
           <b-input-group class="">
             <b-col cols="12" sm="3" md="4" lg="3">
             <b-input-group-prepend class="">
-              <b-btn size="" class="occurName w-100" disabled :variant="item.conflict ? 'danger' : 'primary'">{{item.locName ? item.locName : item.location}}</b-btn>
+              <b-btn size="" class="occurName w-100" disabled :variant="item.conflict ? 'danger' : 'primary'">{{item.locName ? item.locName : locations[item.location - 1].text}}</b-btn>
             </b-input-group-prepend>
             </b-col>
         <b-col cols="12" sm="8" lg="6" class="">
@@ -37,6 +37,7 @@
           
         
         
+    <span class="error-text">Please Enter Vaild Time Range</span>
     </b-list-group-item>
   </b-list-group>
 </template>
@@ -50,16 +51,17 @@ export default {
   props: ['occurrences', 'locations'],
   data () {
     return {
-      size: screen.width
+      errors: this.$parent.$parent.$children[1].errors
     }
   },
   mounted () {
-    if (this.$parent.event) {
-      console.log('yo yo')
-      for (let occur of this.occurrences) {
-        occur.location = occur.locationID
-      }
-      this.occurrences = Object.assign(this.occurrences, {location: this.occurrences.locationID})
+    if (this) {
+      console.log(this.$parent.$parent.$children[1].errors)
+      // for (let occur of this.occurrences) {
+      //   this.$set(occur, 'location', occur.locationID)
+      //   return occur
+      // }
+      // this.occurrences = Object.assign(this.occurrences, {location: this.occurrences.locationID})
     }
   },
   methods: {
@@ -72,8 +74,10 @@ export default {
   },
   computed: {
     ...mapState(['time']),
-    mobile () {
-      console.log(screen.width)
+    error () {
+      if (this.$parent.$parent.$children[1].errors) {
+        return true
+      } else { return false }
     }
   }
 } // export
@@ -82,6 +86,12 @@ export default {
 
 
 <style lang="scss" scoped>
+  .error-text {
+    font-size: 80%;
+    color: #dc3545;
+    margin-top: 0.25rem;
+    width: 100%;
+  }
   .occurItem {
     margin: auto;
     max-width: 1000px;
@@ -120,8 +130,6 @@ export default {
         padding-right: 0;
         padding-left: 0;
       }
-      .occurName {
-        // width: 127px;
-      }
+      
     }
 </style>

@@ -3,8 +3,11 @@
     <b-row align-h="center">
       <h2 class="text-center">{{post.title ? post.title : title}}</h2>
     </b-row>
-    <b-row>
+    <b-row v-if="!truncate">
       <p class="mb-2 ml-3">{{post.description}}</p>
+    </b-row>
+    <b-row>
+      <p class="mb-2 ml-3">{{post.description | truncate(200)}}</p>
     </b-row>
     <b-row>
       <b-link v-if="post.link" :href="post.link" target="_blank" class="ml-5 text-prime2"><icon icon="link" /> Click For More</b-link>
@@ -25,10 +28,9 @@
 import { mapState } from 'vuex'
 export default {
   name: 'PostView',
-  props: { post: Object },
+  props: { post: Object, truncate: Boolean },
   data () {
     return {
-      hoverFocus: null,
       title: 'PostView'
     }
   },

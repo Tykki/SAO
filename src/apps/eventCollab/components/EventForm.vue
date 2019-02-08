@@ -6,6 +6,7 @@
     <b-card border-variant="default" :class="{ 'shadow-sm': true }">
 
           <b-alert :show="errAlert" variant="danger"><span v-for="(error, err) in errLog.errMsg" :key="err">{{error}}</span></b-alert>
+          <!-- <b-alert :show="ocrErrLog.message" variant="danger"><span>{{ocrErrLog.message}}</span></b-alert> -->
           
 
         <b-form-row>
@@ -15,8 +16,8 @@
                       label-cols="1"
                       label="Event Name:"
                       label-for="eventName"> <!-- make breakpoints for better use of horizontal view -->
-              <b-form-input v-if="event" required id="eventName" v-model="event.name" type="text" placeholder="Ex: Taco Tuesday" />
-              <b-form-input v-else required id="eventName" v-model="formData.eventName" type="text" placeholder="Ex: Taco Tuesday" />
+              <!-- <b-form-input v-if="event" required id="eventName" v-model="event.name" type="text" placeholder="Ex: Taco Tuesday" /> -->
+              <b-form-input required id="eventName" v-model="formData.name" type="text" placeholder="Ex: Taco Tuesday" />
             <b-form-invalid-feedback>Please Enter an Event Name</b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -31,8 +32,8 @@
                       label-cols="2"
                       label="Department:"
                       label-for="department"> <!-- make breakpoints for better use of horizontal view -->
-              <b-form-select v-if="event" required id="department" v-model="event.departmentID" :options="eventInputs.departments" />
-              <b-form-select v-else required id="department" v-model="formData.department" :options="eventInputs.departments" />
+              <!-- <b-form-select v-if="event" required id="department" v-model="event.departmentID" :options="eventInputs.departments" /> -->
+              <b-form-select required id="department" v-model="formData.department" :options="eventInputs.departments" />
             <b-form-invalid-feedback>Please Select a Department</b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -43,8 +44,8 @@
                       label-cols="2"
                       label="Audience:"
                       label-for="audience"> <!-- make breakpoints for better use of horizontal view -->
-              <b-form-select v-if="event" required id="audience" v-model="event.audienceID" :options="eventInputs.audiences" />
-              <b-form-select v-else required id="audience" v-model="formData.audience" :options="eventInputs.audiences" />
+              <!-- <b-form-select v-if="event" required id="audience" v-model="event.audienceID" :options="eventInputs.audiences" /> -->
+              <b-form-select required id="audience" v-model="formData.audience" :options="eventInputs.audiences" />
             <b-form-invalid-feedback>Please Select an Audience</b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -59,8 +60,8 @@
                   label-cols="2"
                   label="Description:"
                   label-for="description"> <!-- make breakpoints for better use of horizontal view -->
-          <b-form-textarea v-if="event" required id="description" v-model="event.description" rows="6" />
-          <b-form-textarea v-else required id="description" v-model="formData.description" rows="6" />
+          <!-- <b-form-textarea v-if="event" required id="description" v-model="event.description" rows="6" /> -->
+          <b-form-textarea required id="description" v-model="formData.description" rows="6" />
             <b-form-invalid-feedback>Please Enter a Description</b-form-invalid-feedback>
         </b-form-group>
             
@@ -73,8 +74,8 @@
                         class="labelAdj"
                         label="Category:"
                         label-for="category">
-                <b-form-select v-if="event" required id="category" v-model="event.categoryID" :options="eventInputs.categories" />
-                <b-form-select v-else required id="category" v-model="formData.category" @input="toggleSignUp()" :options="eventInputs.categories" />
+                <!-- <b-form-select v-if="event" required id="category" v-model="event.categoryID" :options="eventInputs.categories" /> -->
+                <b-form-select required id="category" v-model="formData.category" @input="toggleSignUp()" :options="eventInputs.categories" />
             <b-form-invalid-feedback>Please Select a Category</b-form-invalid-feedback>
               </b-form-group>
               
@@ -89,8 +90,8 @@
                           class="labelAdj"
                           label="Status:"
                           label-for="status">
-                  <b-form-select v-if="event" required id="status" v-model="event.statusID" :options="eventInputs.status" />
-                  <b-form-select v-else required id="status" v-model="formData.status" :options="eventInputs.status" />
+                  <!-- <b-form-select v-if="event" required id="status" v-model="event.statusID" :options="eventInputs.status" /> -->
+                  <b-form-select required id="status" v-model="formData.status" :options="eventInputs.status" />
             <b-form-invalid-feedback>Please Select a Statue</b-form-invalid-feedback>
                 </b-form-group>
               </b-col>          
@@ -106,8 +107,8 @@
                   label-cols="2"
                   label="Theme:"
                   label-for="theme"> <!-- make breakpoints for better use of horizontal view -->
-              <b-form-input v-if="event" id="theme" v-model="event.theme" />
-              <b-form-input v-else id="theme" v-model="formData.theme" />
+              <!-- <b-form-input v-if="event" id="theme" v-model="event.theme" /> -->
+              <b-form-input id="theme" v-model="formData.theme" />
             </b-form-group>
           </b-collapse>
             <b-link class="" @click="Ctheme = !Ctheme">{{themeLabel}}</b-link>
@@ -120,8 +121,8 @@
                   label-cols="2"
                   label="Sign Up Link:"
                   label-for="signUpLink"> <!-- make breakpoints for better use of horizontal view -->
-              <b-form-input v-if="event" id="signUpLink" placeholder="ex: https://uic.edu" v-model="event.signUpLink" type="url" :required="pdLink"/>
-              <b-form-input v-else id="signUpLink" placeholder="ex: https://uic.edu" v-model="formData.signUpLink" type="url" :required="pdLink"/>
+              <!-- <b-form-input v-if="event" id="signUpLink" placeholder="ex: https://uic.edu" v-model="event.signUpLink" type="url" :required="pdLink"/> -->
+              <b-form-input id="signUpLink" placeholder="ex: https://uic.edu" v-model="formData.signUpLink" type="url" :required="pdLink"/>
             <b-form-invalid-feedback>Please Provide a Vaild Sign Up Link</b-form-invalid-feedback>
             </b-form-group>
           </b-collapse>
@@ -130,8 +131,8 @@
 
         <b-row class="mt-5" align-h="center">
           <b-col cols="12" class="text-center">
-            <occur-list class="mt-3" v-if="event" @deleteReq="deleteOccur" @editReq="editOccur" :locations="eventInputs.locations" :occurrences="event.occurrences" />
-            <occur-list v-else @deleteReq="deleteOccur" @editReq="editOccur" :locations="eventInputs.locations" :occurrences="formData.occurrences" />
+            <!-- <occur-list class="mt-3" v-if="event" @deleteReq="deleteOccur" @editReq="editOccur" :locations="eventInputs.locations" :occurrences="event.occurrences" /> -->
+            <occur-list @deleteReq="deleteOccur" @editReq="editOccur" :locations="eventInputs.locations" :occurrences="formData.occurrences" />
             <form-modal class="mt-3" ref="formModal" @addOccur="showOccur" :locations="eventInputs.locations"></form-modal>
           </b-col>
         </b-row>
@@ -160,6 +161,7 @@ import OccurList from '@/apps/eventCollab/components/OccurList'
 
 export default {
   name: 'Event-Form',
+  props: ['ocrErrLog'],
   data () {
     return {
       title: () => this.event ? 'Update Event' : 'Create Event',
@@ -178,7 +180,13 @@ export default {
     'form-modal': FormModal,
     'occur-list': OccurList
   },
-  created () {
+  mounted () {
+    if (this.event) {
+      this.formData = Object.assign({}, this.event, {audience: this.event.audienceID, category: this.event.categoryID, department: this.event.departmentID, status: this.event.statusID})
+      for (let occur of this.formData.occurrences) {
+        occur.location = occur.locationID
+      }
+    }
   },
   methods: {
     eventForm () { return document.getElementById('eventForm') },
@@ -192,11 +200,7 @@ export default {
       } else return false
     },
     toggleSignUp () {
-      if (this.event) {
-        if (this.event.categoryID === 16) {
-          this.pdLink = true
-        } else { this.pdLink = false }
-      } else if (this.formData.category === 16) {
+      if (this.formData.category === 16) {
         this.pdLink = true
       } else { this.pdLink = false }
     },
@@ -205,12 +209,7 @@ export default {
         errCount: 0,
         errMsg: []
       }
-      if (this.event) {
-        if (this.event.occurrences.length === 0) {
-          this.errLog.errMsg.push('Please Add at least 1 Occurrence.')
-          this.errLog.errCount ++
-        }
-      } else if (this.formData.occurrences.length === 0) {
+      if (this.formData.occurrences.length === 0) {
         this.errLog.errMsg.push('Please Add at least 1 Occurrence.')
         this.errLog.errCount ++
       }
@@ -228,7 +227,7 @@ export default {
           category: this.formData.category,
           department: this.formData.department,
           status: this.formData.status,
-          name: this.formData.eventName,
+          name: this.formData.name,
           description: this.formData.description,
           occurrences: this.formData.occurrences,
           theme: this.Ctheme ? this.formData.theme : '',
@@ -248,20 +247,20 @@ export default {
     },
     update () {
       console.log(this.event)
-      if ((this.occurValid() === true) && (this.event.description !== '') && (this.event.name !== '')) {
+      if ((this.occurValid() === true) && (this.formData.description !== '') && (this.formData.name !== '')) {
         let parsedData = {
-          audience: this.event.audienceID,
-          category: this.event.categoryID,
-          department: this.event.departmentID,
-          status: this.event.statusID,
-          name: this.event.name,
-          description: this.event.description,
-          occurrences: this.event.occurrences,
-          theme: this.Ctheme ? this.event.theme : '',
+          audience: this.formData.audience,
+          category: this.formData.category,
+          department: this.formData.department,
+          status: this.formData.status,
+          name: this.formData.name,
+          description: this.formData.description,
+          occurrences: this.formData.occurrences,
+          theme: this.Ctheme ? this.formData.theme : '',
           tableau: true,
           marketing: true,
           marketingInfo: '',
-          ticketed: this.isEven(this.event.occurrences[0].location)
+          ticketed: this.isEven(this.formData.occurrences[0].location)
         }
         this.formData = parsedData
         console.log(parsedData)
@@ -314,8 +313,14 @@ export default {
   computed: {
     ...mapState(['time']),
     ...mapGetters(['eventInputs', 'token']),
+    occurError () {
+      if (this.ocrErrLog) {
+        this.errLog.errCount++
+        this.errLog.errMsg.push(this.ocrErrLog.message)
+      }
+    },
     errAlert () {
-      if ((this.submitted === false)) {
+      if ((this.submitted === false) && this.ocrErrLog) {
         return false
       } else return true
     },
