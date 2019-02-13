@@ -5,25 +5,7 @@
     <b-row >
 
         <b-col lg="8">
-          <b-card class="shadow-sm" title-tag="h4" title="Professional Development">
-              <b-list-group>
-                <b-list-group-item v-for="(event, i) of proDev" :key="i" button>
-                  <b-row>
-                    <b-col v-b-toggle="`detail${i}`">
-                      <span>{{event.name}}</span><br/>
-                      <small class="text-secondary"><b>{{time(event.occurrences[0].startDate).format("DD MMM YYYY")}}, {{event.occurrences[0].location}}</b></small>
-                    </b-col>
-                    <b-col cols="12" sm="2" md="3" xl="2" align-self="center">
-                      <b-btn class="proDevBtn text-white" size="sm" :variant="btnColor(i)">Sign Up</b-btn>
-                    </b-col>
-                  </b-row>
-                <b-collapse :id="`detail${i}`" accordion="proDev">
-                  <event-view :event="event" :proDev="true" />
-                </b-collapse>
-                  
-                </b-list-group-item>
-              </b-list-group>
-            </b-card>
+          <pro-dev title="Professional Development" :data="proDev" />
 
             <h4>UIC News</h4>
             <b-card v-for="(news, n) of UICnews.display" :key="n" class="shadow-sm" :class="{'shadow-lg': newsFocus === n}" @mouseover="newsFocus = n" @mouseout="newsFocus = null">
@@ -68,10 +50,11 @@
 import { mapState } from 'vuex'
 import EventView from '@/apps/eventViewer/components/EventView'
 import ImportantPosts from '@/assets/vue/UpcomingModal'
+import ProDev from '@/assets/vue/AccordionCard'
 export default {
   name: 'Dashboard',
   // props: { authUser: Object, time: function },
-  components: { EventView, ImportantPosts },
+  components: { EventView, ImportantPosts, ProDev },
   data () {
     return {
       title: 'Welcome,',
@@ -90,7 +73,9 @@ export default {
       this.$set(this.UICnews, 'display', res.items.slice(0, 5))
     })
     fetch(`https://websrvcs.sa.uic.edu/api/sao/events/?token=${this.authUser.token}&category=16`).then(res => res.json()).then(res => {
+      res.reverse()
       $.each(res, (i, v) => {
+        console.log(i, v)
         if (this.proDev.length < 3) {
           this.proDev.push(v)
         }
@@ -103,11 +88,6 @@ export default {
     ...mapState(['authUser', 'time'])
   },
   methods: {
-    btnColor (i) {
-      if (i === 1) {
-        return 'prime2'
-      } else { return 'warning' }
-    }
   }
 }
 </script>
@@ -124,9 +104,6 @@ export default {
 }
 #saTechBanner{
   max-width: 250px;
-}
-.proDevBtn{
-  border-radius: 21px
 }
 @media screen and (min-width: 992px) and (max-width: 1269px) {
   #saTechBanner{

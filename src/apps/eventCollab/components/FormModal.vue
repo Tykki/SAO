@@ -32,7 +32,7 @@
                 label="Start:"
                 label-for="start">
             <!-- <b-form-input v-if="edit" id="start" :state="modalErrLog.state.start" v-model="modalData.strt" type="datetime-local" :required="modalData.required"/> -->
-            <b-form-input id="start" :state="modalErrLog.state.start" v-model="modalData.startDate" type="datetime-local" :required="modalData.required"/>
+            <b-form-input id="start" :value="defaultTime" :state="modalErrLog.state.start" v-model="modalData.startDate" type="datetime-local" :required="modalData.required"/>
           <b-form-invalid-feedback class="text-left">Please Enter a Start Date</b-form-invalid-feedback>
           </b-form-group>
         </b-col>
@@ -44,7 +44,7 @@
                 label="End:"
                 label-for="end">
             <!-- <b-form-input v-if="edit" id="end" :state="modalErrLog.state.end" v-model="modalData.fin" type="datetime-local" :required="modalData.required"/> -->
-            <b-form-input id="end" :state="modalErrLog.state.end" v-model="modalData.endDate" type="datetime-local" :required="modalData.required"/>
+            <b-form-input id="end" :value="defaultTime" :state="modalErrLog.state.end" v-model="modalData.endDate" type="datetime-local" :required="modalData.required"/>
           <b-form-invalid-feedback class="text-left">Please Enter an End Date</b-form-invalid-feedback>
           </b-form-group>
         </b-col>
@@ -214,6 +214,10 @@
     },
     computed: {
       ...mapState(['time']),
+      defaultTime () {
+        console.log(this.time().format('YYYY-MM-DDT00:00'))
+        return this.time().format('YYYY-MM-DDT00:00').toString()
+      },
       addy () {
         if ((this.modalData.location === 6) || (this.modalData.location === 19) || (this.modalData.location === undefined)) {
           return false

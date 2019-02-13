@@ -7,13 +7,13 @@
         <h5 align="left" class="mt-3">{{event.description}}</h5>
         </b-col>
         <b-col v-if="!proDev" class="" cols="0">
-          <b-btn variant="outline-secondary"><icon :icon="['far', 'edit']" @click="editEvent(event)" /></b-btn>
+          <b-btn variant="outline-secondary"><icon :icon="['far', 'edit']" @click="openEditModal()" /></b-btn>
         </b-col>
       </b-row>
     </b-container>
     
     <hr/>
-    <b-badge :variant="event.status === 'confirmed' ? 'success' : 'danger'">
+    <b-badge :variant="event.status === 'Confirmed' ? 'success' : 'danger'">
       {{event.status}}
     </b-badge>
     
@@ -40,12 +40,20 @@
         </b-tab>
       </b-tabs>
     </b-card>
-    <!-- raw: <p>{{JSON.stringify(event)}}</p> -->
+    <b-modal ref="editModal" size="sm" hide-footer title="Edit This Event?">
+      <div class="text-center">
+        <h6>Are You Sure?</h6>
+      </div>
+      <div class="text-center">
+        <b-btn class="" variant="outline-info" @click="editEvent(event)">Update Event</b-btn>
+        <b-btn class="" variant="outline-danger" @click="deleteEvent(event.id)">Delete Event</b-btn>
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
-import EditModal from './helpers/EditModal'
+// import EditModal from './helpers/EditModal'
 import { mapGetters } from 'vuex'
 export default {
   name: 'EventView',
@@ -59,52 +67,26 @@ export default {
     proDev: Boolean
   },
   computed: {
-    ...mapGetters(['eventInputs'])
+    ...mapGetters(['eventInputs', 'token'])
   },
   components: {
-    'edit-btn': EditModal
+    // 'edit-btn': EditModal
   },
   mounted () {
-    // this.$set(this.event, 'locationText', [])
-    // this.numToNam()
   },
   methods: {
-    // numToNam () {
-    //   this.eventInputs.audiences.filter(inp => {
-    //     if (this.event.audience === inp.value) {
-    //       this.$set(this.event, 'audienceText', inp.text)
-    //     }
-    //   })
-    //   this.eventInputs.categories.filter(inp => {
-    //     if (this.event.category === inp.value) {
-    //       this.$set(this.event, 'categoryText', inp.text)
-    //     }
-    //   })
-    //   this.eventInputs.departments.filter(inp => {
-    //     if (this.event.department === inp.value) {
-    //       this.$set(this.event, 'departmentText', inp.text)
-    //     }
-    //   })
-    //   this.eventInputs.status.filter(inp => {
-    //     if (this.event.status === inp.value) {
-    //       this.$set(this.event, 'statusText', inp.text)
-    //     }
-    //   })
-      // let numLoc = this.event.occurrences.map(occur => occur.location)
-      // console.log(numLoc)
-      // let test = this.eventInputs.locations.filter(inp => {
-      //   if (numLoc.filter(num => num === inp)) {
-      //     console.log(test)
-      //   }
-      // })
-      // this.eventInputs.locations.filter(inp => {
-      //   if (this.event.occurrences.map(occur => occur.location === inp.value)) {
-      //     this.event.locationText.push(inp.text)
-      //   }
-      // })
-    // },
     editEvent (event) {
       this.$router.push({name: 'Event Form', params: {event}})
+    },
+    deleteEvent (id) {
+      fetch(`https://websrvcs.sa.uic.edu/api/sao/events/${id}`, {method: 'delete', mode: 'cors', headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}}).then(res => console.log(res))
+      this.$refs.editModal.hide()
+      // this.$router.go()
+      // this.$forceUpdate()
+      // window.location.reload(true)
+    },
+    openEditModal () {
+      this.$refs.editModal.show()
     },
     reqUpdate () {
       this.$emit('reqUpdate', this.event)

@@ -95,6 +95,7 @@ export default {
       this.$store.commit('KILL_TOKEN')
       localStorage.removeItem('token')
       this.$router.push('Logout')
+      window.location.href = 'https://websrvcs.sa.uic.edu/api/sao/auth/logout'
     }
   },
   components: {

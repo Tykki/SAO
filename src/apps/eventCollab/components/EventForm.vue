@@ -1,7 +1,7 @@
 <template>
   <div id="">
     <h1>{{title()}}</h1>
-    
+    <alerts ref="alerts" />
       <b-form id="eventForm" class="text-left" @submit.prevent="submit" novalidate :validated="submitted">
     <b-card border-variant="default" :class="{ 'shadow-sm': true }">
 
@@ -115,24 +115,33 @@
           </b-col>
 
           <b-col sm="12" md="6">
-          <b-collapse id="signUpLink" v-model="pdLink">
+          <b-collapse id="signupLink" v-model="pdLink">
             <b-form-group breakpoint="xl" 
                   label-size="sm"
                   label-cols="2"
                   label="Sign Up Link:"
-                  label-for="signUpLink"> <!-- make breakpoints for better use of horizontal view -->
-              <!-- <b-form-input v-if="event" id="signUpLink" placeholder="ex: https://uic.edu" v-model="event.signUpLink" type="url" :required="pdLink"/> -->
-              <b-form-input id="signUpLink" placeholder="ex: https://uic.edu" v-model="formData.signUpLink" type="url" :required="pdLink"/>
+                  label-for="signupLink"> <!-- make breakpoints for better use of horizontal view -->
+              <!-- <b-form-input v-if="event" id="signupLink" placeholder="ex: https://uic.edu" v-model="event.signupLink" type="url" :required="pdLink"/> -->
+              <b-form-input id="signupLink" placeholder="ex: https://uic.edu" v-model="formData.signupLink" type="url" :required="pdLink"/>
             <b-form-invalid-feedback>Please Provide a Vaild Sign Up Link</b-form-invalid-feedback>
             </b-form-group>
           </b-collapse>
           </b-col>
         </b-row>
 
+        <b-row>
+          <b-col class="pt-3">
+            <b-form-group class="pl-2" label="Does Your Event Include?">
+              <b-form-checkbox-group v-model="formData.selectedOpts" :options="checkOpts">
+              </b-form-checkbox-group>
+            </b-form-group>
+          </b-col>
+        </b-row>
+
         <b-row class="mt-5" align-h="center">
           <b-col cols="12" class="text-center">
             <!-- <occur-list class="mt-3" v-if="event" @deleteReq="deleteOccur" @editReq="editOccur" :locations="eventInputs.locations" :occurrences="event.occurrences" /> -->
-            <occur-list @deleteReq="deleteOccur" @editReq="editOccur" :locations="eventInputs.locations" :occurrences="formData.occurrences" />
+            <occur-list @deleteReq="openDelOccurModal" @editReq="editOccur" :locations="eventInputs.locations" :occurrences="formData.occurrences" />
             <form-modal class="mt-3" ref="formModal" @addOccur="showOccur" :locations="eventInputs.locations"></form-modal>
           </b-col>
         </b-row>
@@ -151,6 +160,15 @@
           </b-col>
         </b-row>
       </b-form>
+      <b-modal ref="delOccurModal" size="sm" hide-footer title="Delete This Occurrence?">
+      <div class="text-center">
+        <h6>Are You Sure?</h6>
+      </div>
+      <div class="text-center">
+        <b-btn class="" variant="outline-info" @click="hideDelOccurModal">Do Not Delete</b-btn>
+        <b-btn class="" variant="outline-danger" @click="deleteOccur(id)">Delete Occurrence</b-btn>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -158,6 +176,7 @@
 import { mapGetters, mapState } from 'vuex'
 import FormModal from '@/apps/eventCollab/components/FormModal'
 import OccurList from '@/apps/eventCollab/components/OccurList'
+import Alerts from '@/apps/eventCollab/components/Alerts'
 
 export default {
   name: 'Event-Form',
@@ -169,35 +188,46 @@ export default {
         errCount: 0,
         errMsg: []
       },
-      formData: { occurrences: [] },
+      formData: { occurrences: [], selectedOpts: [] },
       Ctheme: true,
+      checkOpts: [{text: 'Tableau', value: 'tableau'}, {text: 'Marketing', value: 'marketing'}, {text: 'Ticketing', value: 'ticketing'}],
       pdLink: false,
       submitted: false,
-      event: this.$route.params.event
+      event: this.$route.params.event,
+      toDelete: null
     }
   },
   components: {
     'form-modal': FormModal,
-    'occur-list': OccurList
+    'occur-list': OccurList,
+    Alerts
   },
   mounted () {
+    console.log(this)
     if (this.event) {
-      this.formData = Object.assign({}, this.event, {audience: this.event.audienceID, category: this.event.categoryID, department: this.event.departmentID, status: this.event.statusID})
+      this.formData = Object.assign({}, this.event, {audience: this.event.audienceID, category: this.event.categoryID, department: this.event.departmentID, status: this.event.statusID, selectedOpts: []})
       for (let occur of this.formData.occurrences) {
+        occur.locName = occur.location
         occur.location = occur.locationID
       }
+      this.formData.tableau ? this.formData.selectedOpts.push('tableau') : null
+      this.formData.marketing_requested ? this.formData.selectedOpts.push('marketing') : null
+      this.formData.ticketed ? this.formData.selectedOpts.push('ticketing') : null
     }
   },
   methods: {
+    openDelOccurModal (id) {
+      console.log(id)
+      this.toDelete = id
+      this.$refs.delOccurModal.show(id)
+    },
+    hideDelOccurModal () {
+      this.$refs.delOccurModal.hide()
+    },
     eventForm () { return document.getElementById('eventForm') },
     clearForm () {
-      this.formData = { occurrences: [] }
+      this.formData = { occurrences: [], selectedOpts: [] }
       this.event ? this.event = undefined : null
-    },
-    isEven (n) {
-      if (n % 2 === 0) {
-        return true
-      } else return false
     },
     toggleSignUp () {
       if (this.formData.category === 16) {
@@ -222,6 +252,7 @@ export default {
     },
     create () {
       if ((this.occurValid() === true) && (this.eventForm().checkValidity() === true)) {
+        const t = true; const f = false
         let parsedData = {
           audience: this.formData.audience,
           category: this.formData.category,
@@ -229,17 +260,22 @@ export default {
           status: this.formData.status,
           name: this.formData.name,
           description: this.formData.description,
+          link: this.formData.link ? this.formData.link : '',
+          signupLink: this.formData.signupLink ? this.formData.signupLink : '',
           occurrences: this.formData.occurrences,
           theme: this.Ctheme ? this.formData.theme : '',
-          tableau: true,
-          marketing: true,
+          tableau: this.formData.selectedOpts.filter(x => x === 'tableau').length ? t : f,
+          marketing: this.formData.selectedOpts.filter(x => x === 'marketing').length ? t : f,
           marketingInfo: '',
-          ticketed: this.isEven(this.formData.occurrences[0].location)
+          ticketed: this.formData.selectedOpts.filter(x => x === 'ticketing').length ? t : f
         }
         console.log(parsedData)
         // this.$('addReq', parsedData)
         // fetch('/static/testing.json').then(res => res.json()).then(res => console.log(res))
-        fetch('https://websrvcs.sa.uic.edu/api/sao/events/', {method: 'post', mode: 'cors', body: JSON.stringify(parsedData), headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}}).then(res => console.log(res))
+        fetch('https://websrvcs.sa.uic.edu/api/sao/events/', {method: 'post', mode: 'cors', body: JSON.stringify(parsedData), headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}}).then(res => {
+          console.log(res)
+          this.$refs.alerts.showAlert('created')
+        })
         this.submitted = false
         this.clearForm()
         this.$emit('reqClearConflicts')
@@ -248,25 +284,31 @@ export default {
     update () {
       console.log(this.event)
       if ((this.occurValid() === true) && (this.formData.description !== '') && (this.formData.name !== '')) {
+        const t = true; const f = false
         let parsedData = {
           audience: this.formData.audience,
           category: this.formData.category,
           department: this.formData.department,
           status: this.formData.status,
           name: this.formData.name,
+          link: this.formData.link ? this.formData.link : '',
+          signupLink: this.formData.signupLink ? this.formData.signupLink : '',
           description: this.formData.description,
           occurrences: this.formData.occurrences,
           theme: this.Ctheme ? this.formData.theme : '',
-          tableau: true,
-          marketing: true,
+          tableau: this.formData.selectedOpts.filter(x => x === 'tableau').length ? t : f,
+          marketing: this.formData.selectedOpts.filter(x => x === 'marketing').length ? t : f,
           marketingInfo: '',
-          ticketed: this.isEven(this.formData.occurrences[0].location)
+          ticketed: this.formData.selectedOpts.filter(x => x === 'ticketing').length ? t : f
         }
         this.formData = parsedData
         console.log(parsedData)
         // this.$('addReq', parsedData)
         // fetch('/static/testing.json').then(res => res.json()).then(res => console.log(res))
-        fetch(`https://websrvcs.sa.uic.edu/api/sao/events/${this.event.id}`, {method: 'put', mode: 'cors', body: JSON.stringify(parsedData), headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}}).then(res => console.log(res))
+        fetch(`https://websrvcs.sa.uic.edu/api/sao/events/${this.event.id}`, {method: 'put', mode: 'cors', body: JSON.stringify(parsedData), headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}}).then(res => {
+          console.log(res)
+          this.$refs.alerts.showAlert('updated')
+        })
         this.submitted = false
         this.clearForm()
         this.$emit('reqClearConflicts')
@@ -293,10 +335,12 @@ export default {
         this.$emit('reqOccurCheck', this.event.occurrences)
       } else { this.$emit('reqOccurCheck', this.formData.occurrences) }
     },
-    deleteOccur (id) {
+    deleteOccur () {
+      let id = this.toDelete
       if (this.event) {
         this.event.occurrences.splice(id, 1)
       } else { this.formData.occurrences.splice(id, 1) }
+      this.hideDelOccurModal()
     },
     editOccur (id, occur) {
       // console.log(id, occur)
@@ -331,9 +375,6 @@ export default {
     }
   },
   watch: {
-    pdLink () {
-      console.log(this.pdLink)
-    }
   }
 }
 </script>

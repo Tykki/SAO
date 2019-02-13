@@ -37,7 +37,7 @@
           
         
         
-    <span class="error-text">Please Enter Vaild Time Range</span>
+    <!-- <span class="error-text">Please Enter Vaild Time Range</span> -->
     </b-list-group-item>
   </b-list-group>
 </template>
@@ -51,7 +51,7 @@ export default {
   props: ['occurrences', 'locations'],
   data () {
     return {
-      errors: this.$parent.$parent.$children[1].errors
+      // errors: this.$parent.$parent.$children[1].errors
     }
   },
   mounted () {

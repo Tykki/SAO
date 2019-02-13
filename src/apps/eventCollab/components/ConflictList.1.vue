@@ -32,7 +32,8 @@ export default {
   props: ['occur'],
   data () {
     return {
-      conflicts: undefined
+      conflicts: undefined,
+      errors: []
     }
   },
   // created () {
@@ -53,11 +54,16 @@ export default {
       this.conflicts = []
       for (let match of this.occur) {
         console.log(match)
-        fetch(`https://websrvcs.sa.uic.edu/api/sao/events/?token=${this.$store.state.authUser.token}&startDate=${match.startDate}&endDate=${match.endDate}&location=${match.locationID ? match.locationID : match.location}`).then(res => res.json()).then(res => {
-          $.each(res, (i, v) => {
-            // console.log(i, v)
-            this.conflicts.push(v)
-          })
+        fetch(`https://websrvcs.sa.uic.edu/api/sao/events/?token=${this.$store.state.authUser.token}&startDate=${match.startDate}&endDate=${match.endDate}&location=${match.location}`).then(res => res.json()).then((err, res) => {
+          if (err.details) {
+            this.errors.push(err.details[0])
+          } else {
+            this.errors = []
+            $.each(res, (i, v) => {
+              // console.log(i, v)
+              this.conflicts.push(v)
+            })
+          }
         // console.log(res)
         // this.conflicts.push(res)
         // console.log(res)

@@ -29,8 +29,8 @@
                   <!-- <i class="fas fa-bell has-badge" data-count="6"></i> -->
                 </b-link>
                 <b-link id="aviClick">
-                  <b-img id="avatar" src="" alt="authUser avatar" />
-                  <!-- <div id="avatar"><span>{{this.$parent.authUser.initials}}</span></div> -->
+                  <!-- <b-img id="avatar" src="" alt="authUser avatar" /> -->
+                  <div id="avatar"><span>A.E.</span></div>
                 </b-link>
                 <span v-if="displayNameHasSpace" id="displayName">{{authUser.displayName}}</span>
                 <!-- <b-link id="menuBars" href="#" class="">
@@ -230,12 +230,12 @@ export default {
     position: relative;
     z-index: 99;
     max-height: 40px;
-    /*width: fit-content;*/
+    width: 42px;
     background-color: #d8d8d8;
     display: inline-block;
-    /*span{
-      font-size: 1.3rem;
-    }*/
+    span{
+      font-size: 1.1rem;
+    }
     &:hover{
       color: inherit;
     }

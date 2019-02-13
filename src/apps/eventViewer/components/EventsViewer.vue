@@ -67,7 +67,7 @@
           <b-row>
             <b-col>
               <b-card class="shadow-sm">
-                <p slot="header" class="w-100 mb-0" v-b-toggle.colAud aria-label="Audience">Audience<p slot="header" class="w-100 mb-0 text-right text-muted" v-b-toggle.colAud><small>(click to toggle)</small></p>
+                <p slot="header" class="w-100 mb-0" v-b-toggle.colAud aria-label="Audience">Audience<p slot="header" class="w-100 mb-0 text-right text-muted" v-b-toggle.colAud><icon icon="angle-down" /></p>
                 <b-collapse id="colAud">
               <b-form-group class="card-text">
                 <b-form-checkbox-group stacked button-variant="prime2" v-model="selectedAudiences" name="audienceCheckboxes" :options="audiences">
@@ -81,7 +81,7 @@
           <b-row>
             <b-col cols="12" sm="6" xl="12">
               <b-card class="shadow-sm">
-                <p slot="header" class="w-100 mb-0" v-b-toggle.colDep aria-label="Departments">Departments<p slot="header" class="w-100 mb-0 text-right text-muted" v-b-toggle.colDep><small>(click to toggle)</small></p>
+                <p slot="header" class="w-100 mb-0" v-b-toggle.colDep aria-label="Departments">Departments<p slot="header" class="w-100 mb-0 text-right text-muted" v-b-toggle.colDep><icon icon="angle-down" /></p>
                 <b-collapse id="colDep">
               <b-form-group class="card-text">
                 <b-form-checkbox
@@ -105,7 +105,7 @@
             <b-col cols="12" sm="6" xl="12">
               
           <b-card class="shadow-sm">
-            <p slot="header" class="w-100 mb-0" v-b-toggle.colCat aria-label="Categories">Categories<p slot="header" class="w-100 mb-0 text-right text-muted" v-b-toggle.colCat><small>(click to toggle)</small></p>
+            <p slot="header" class="w-100 mb-0" v-b-toggle.colCat aria-label="Categories">Categories<p slot="header" class="w-100 mb-0 text-right text-muted" v-b-toggle.colCat><icon icon="angle-down" /></p>
             <b-collapse id="colCat">
           <b-form-group class="card-text">
             <b-form-checkbox
