@@ -12,11 +12,11 @@
                   <span v-if="tMore() === 35">{{event.name | truncate(35)}}</span>
                   <span v-if="tMore() === 45">{{event.name | truncate(45)}}</span>
                   <span v-if="tMore() === 60">{{event.name | truncate(60)}}</span>
-                  <span v-if="tMore() === undefined">{{event.name | truncate(25)}}</span>
+                  <span v-if="tMore() === undefined">{{event.name | truncate(60)}}</span>
                 </b-col>
-                <b-col id="eventTime" class="text-left">
+                <!-- <b-col id="eventTime" class="text-left">
                   {{event.occurrences[0] ? new Date(event.occurrences[0].startDate).toLocaleTimeString() : null}}
-                </b-col>
+                </b-col> -->
                 <b-col class="text-right" style="margin-right: -20px">
                   <span id="eventDate" v-if="event.startRange && event.endRange" class="pr-2 mr-5">
                     {{new Date(event.startRange).toLocaleDateString()}} - {{new Date(event.endRange).toLocaleDateString()}}

@@ -12,7 +12,7 @@
               <b-col cols=""><p class="item-text">{{time(item.startRange).format("MMM YYYY")}}<br><span :class="{'text-secondary': hoverPack.hoverFocus !== i}">{{time(item.startRange).format("hh:mm a")}}</span></p></b-col>
             </b-row>
             <b-row class="ml-3">
-              <b-col :class="{'text-secondary': hoverPack.hoverFocus !== i}"><p class="mb-0">{{item.name}}</p></b-col>
+              <b-col :class="{'text-secondary': hoverPack.hoverFocus !== i}"><p class="mb-0">{{item.name | truncate(45)}}</p></b-col>
             </b-row>
           </div>
 

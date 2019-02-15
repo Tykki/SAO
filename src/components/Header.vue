@@ -30,7 +30,7 @@
                 </b-link>
                 <b-link id="aviClick">
                   <!-- <b-img id="avatar" src="" alt="authUser avatar" /> -->
-                  <div id="avatar"><span>A.E.</span></div>
+                  <b-img id="avatar" :src="`https://ui-avatars.com/api/?name=${authUser.givenName}+${authUser.surname}`" alt="avatar image" />
                 </b-link>
                 <span v-if="displayNameHasSpace" id="displayName">{{authUser.displayName}}</span>
                 <!-- <b-link id="menuBars" href="#" class="">

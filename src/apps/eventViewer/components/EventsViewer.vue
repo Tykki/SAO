@@ -1,6 +1,6 @@
 <template>
   <div id="main-content">
-    <upcoming-events :upcoming="upcomingEvents" title="Your Upcoming Events" />
+    <upcoming-events :upcoming="upcomingEvents" title="Upcoming Events" />
 
     <b-row>
       <b-col md="12" xl="9" class="accordionCol" order-xl="1" order="2">
@@ -19,7 +19,7 @@
              <h6 class="">Name</h6> 
             </b-col>
             <b-col id="timeLabel" >
-             <h6 class="">Time</h6>
+             <!-- <h6 class="">Time</h6> -->
             </b-col>
             <b-col id="dateLabel">
             <h6 class="text-right">Date</h6>
@@ -383,10 +383,13 @@ export default {
         if (event.occurrences.length === 0) {
           continue
         } else if (this.upcomingEvents.length < 4) {
+          // if (this.time(event.occurrences[0].startDate) > this.time()) {
+            // console.log(event.occurrences[0].startDate)
           this.upcomingEvents.push(event)
+          // }
         }
       }
-      // this.upcomingEvents.reverse()
+      this.upcomingEvents.reverse()
     }
   }
 }

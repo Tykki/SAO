@@ -35,6 +35,10 @@ export default {
         occurrences: [{location: 'NeverLand', startDate: new Date('1994-06-06'), endDate: Date.now()}, {location: 'Disney World', startDate: new Date('1994-06-06'), endDate: Date.now()}]
       },
       {
+        name: 'Sample Event Name 1x',
+        occurrences: [{location: 'NeverLand', startDate: new Date('2018-06-06'), endDate: Date.now()}, {location: 'Disney World', startDate: new Date('1994-06-06'), endDate: Date.now()}]
+      },
+      {
         name: 'Sample Event Name 2',
         occurrences: [{location: 'Astro World', startDate: new Date('2021-06-06'), endDate: Date.now()}, {location: 'Wakanda', startDate: Date.now(), endDate: Date.now()}]
       },
@@ -45,7 +49,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.sampleData)
     this.dateCheck()
   },
   methods: {
@@ -57,7 +60,7 @@ export default {
     dateCheck () {
       let current = []
       for (let curr of this.sampleData) {
-        if (curr.occurrences[0].startDate > this.time()) {
+        if (this.time(curr.occurrences[0].startDate) > this.time()) {
           // console.log(curr)
           current.push(curr)
           // this.samplecurr.pop()

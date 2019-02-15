@@ -42,6 +42,9 @@ export default new Vuex.Store({
     token (state) {
       return state.authUser.token
     },
+    email (state) {
+      return state.authUser.email
+    },
     resGroups (state) {
       return state.authUser.resourceGroups
     },
@@ -73,17 +76,17 @@ export default new Vuex.Store({
         })
 
       // fetch(`./static/JWT_SIGNING_KEY.pub`).then(res => console.log(res.json()))
-      fetch('https://randomuser.me/api/').then((res) => res.json()).then((data) =>
-        $.each(data, (i, v) => {
-          // console.log(i, v)
-          if (i === 'results') {
-            // console.log(v[0].picture.thumbnail)
-            state.authUser.avi = v[0].picture.thumbnail
-            $('#avatar').attr('src', state.authUser.avi)
-            $('#avatar').show()
-          }
-        }
-        ))
+      // fetch('https://randomuser.me/api/').then((res) => res.json()).then((data) =>
+      //   $.each(data, (i, v) => {
+      //     // console.log(i, v)
+      //     if (i === 'results') {
+      //       // console.log(v[0].picture.thumbnail)
+      //       state.authUser.avi = v[0].picture.thumbnail
+      //       $('#avatar').attr('src', state.authUser.avi)
+      //       $('#avatar').show()
+      //     }
+      //   }
+      //   ))
       // const test = jwt.decode(state.authUser.token, {complete: true})
       // console.log(test.payload)
       jwt.verify(state.authUser.token, pub, { algorithms: ['RS256'] }, (err, data) => {
@@ -102,7 +105,7 @@ export default new Vuex.Store({
           return router.replace('500')
         }
         $.each(data, (i, v) => {
-          // console.log(i, v)
+          // console.log(data)
           if (i === 'givenName') {
             state.authUser.givenName = v
           }

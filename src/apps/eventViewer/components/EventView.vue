@@ -4,10 +4,12 @@
       <b-row>
         <b-col>
         <h2 v-if="!proDev" align="left">{{event.name}}</h2>
+        <hr v-if="proDev" />
         <h5 align="left" class="mt-3">{{event.description}}</h5>
         </b-col>
-        <b-col v-if="!proDev" class="" cols="0">
-          <b-btn variant="outline-secondary"><icon :icon="['far', 'edit']" @click="openEditModal()" /></b-btn>
+        <b-col v-if="(email === event.created_by) & (!proDev)" class="" cols="0">
+          <b-btn variant="outline-secondary" @click="editEvent(event)"><icon :icon="['far', 'edit']" /></b-btn>
+          <b-btn variant="outline-secondary" @click="openDelModal()"><icon :icon="['far', 'trash-alt']" /></b-btn>
         </b-col>
       </b-row>
     </b-container>
@@ -40,13 +42,10 @@
         </b-tab>
       </b-tabs>
     </b-card>
-    <b-modal ref="editModal" size="sm" hide-footer title="Edit This Event?">
+    <b-modal ref="editModal" size="sm" hide-footer title="Delete This Event?">
       <div class="text-center">
-        <h6>Are You Sure?</h6>
-      </div>
-      <div class="text-center">
-        <b-btn class="" variant="outline-info" @click="editEvent(event)">Update Event</b-btn>
-        <b-btn class="" variant="outline-danger" @click="deleteEvent(event.id)">Delete Event</b-btn>
+        <b-btn class="pl-3 pr-3" variant="outline-info" @click="closeDelModal">No</b-btn>
+        <b-btn class="pl-3 pr-3" variant="outline-danger" @click="deleteEvent(event.id)">Yes</b-btn>
       </div>
     </b-modal>
   </div>
@@ -67,7 +66,7 @@ export default {
     proDev: Boolean
   },
   computed: {
-    ...mapGetters(['eventInputs', 'token'])
+    ...mapGetters(['eventInputs', 'token', 'email'])
   },
   components: {
     // 'edit-btn': EditModal
@@ -81,15 +80,15 @@ export default {
     deleteEvent (id) {
       fetch(`https://websrvcs.sa.uic.edu/api/sao/events/${id}`, {method: 'delete', mode: 'cors', headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}}).then(res => console.log(res))
       this.$refs.editModal.hide()
-      // this.$router.go()
+      this.$router.go()
       // this.$forceUpdate()
       // window.location.reload(true)
     },
-    openEditModal () {
+    openDelModal () {
       this.$refs.editModal.show()
     },
-    reqUpdate () {
-      this.$emit('reqUpdate', this.event)
+    closeDelModal () {
+      this.$refs.editModal.hide()
     }
   }
 }

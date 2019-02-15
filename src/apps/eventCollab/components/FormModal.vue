@@ -157,9 +157,8 @@
             conflict: undefined,
             locationID: this.modalData.locationID,
             location: this.modalData.location,
-            locName: this.locations[this.modalData.location - 1].text,
-            // startDate: this.modalData.startDate,
-            // endDate: this.modalData.endDate,
+            locName: this.locations.filter(x => { if (x.value === this.modalData.location) { return x.text } }).map(x => x.text).toString(),
+            // locName: this.locations[this.modalData.location - 1].text,
             strt: this.modalData.startDate,
             fin: this.modalData.endDate,
             startDate: new Date(this.modalData.startDate).toISOString(),
@@ -174,14 +173,11 @@
       },
       submitOccur () {
         if (this.modalCheck()) {
-          // console.log(this.modalErrLog.errMsg)
           this.occurrences = {
             update: false,
             conflict: undefined,
             location: this.modalData.location,
-            locName: this.locations[this.modalData.location - 1].text,
-            // startDate: this.modalData.startDate,
-            // endDate: this.modalData.endDate,
+            locName: this.locations.filter(x => { if (x.value === this.modalData.location) { return x.text } }).map(x => x.text).toString(),
             strt: this.edit ? this.modalData.strt : this.modalData.startDate,
             fin: this.edit ? this.modalData.fin : this.modalData.endDate,
             startDate: this.edit ? new Date(this.modalData.strt).toISOString() : new Date(this.modalData.startDate).toISOString(),

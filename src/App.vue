@@ -32,7 +32,6 @@ export default {
     let token = window.location.hash.split('=')[1]
     if (token === null || token === undefined) {
       if (localStorage.getItem('token') === undefined || localStorage.getItem('token') === null || localStorage.getItem('token') === '') {
-        // console.log('No Token BOI')
         window.location.href = 'https://websrvcs.sa.uic.edu/api/sao/auth'
         return
       }
@@ -42,12 +41,7 @@ export default {
     }
   },
   created () {
-    // this.$set(this.authUser, 'token', localStorage.getItem('token'))
     this.$store.commit('SAVE_TOKEN', localStorage.getItem('token'))
-    // console.log(this.authUser.token)
-    // if (token === null || token === undefined) {
-    //   console.log('no token boi!')
-    // }
     this.buildUser()
     this.formInfo()
   },
@@ -55,11 +49,11 @@ export default {
     this.webSocket()
   },
   watch: {
-    token () {
-      if (this.token === null || this.token === undefined) {
-        console.log('You have no Token fam')
-      }
-    }
+    // token () {
+    //   if (this.token === null || this.token === undefined) {
+    //     console.log('You have no Token fam')
+    //   }
+    // }
   },
   computed: {
     ...mapGetters(['token'])

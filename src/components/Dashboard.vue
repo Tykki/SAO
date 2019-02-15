@@ -75,12 +75,12 @@ export default {
     fetch(`https://websrvcs.sa.uic.edu/api/sao/events/?token=${this.authUser.token}&category=16`).then(res => res.json()).then(res => {
       res.reverse()
       $.each(res, (i, v) => {
-        console.log(i, v)
         if (this.proDev.length < 3) {
           this.proDev.push(v)
         }
         // this.$set(this.proDev, `event${[i]}`, v)
       })
+      this.dateCheck()
     })
     // fetch(`https://websrvcs.sa.uic.edu/api/sao/announcements/?since=2018-08-08&priority=1&token=${this.authUser.token}`).then(res => res.json()).then((data) => { this.$set(this.priorityNotes, 'display', data.slice(0, 4).reverse()); console.log(data) })
   },
@@ -88,6 +88,17 @@ export default {
     ...mapState(['authUser', 'time'])
   },
   methods: {
+    dateCheck () {
+      let current = []
+      for (let curr of this.proDev) {
+        if (this.time(curr.occurrences[0].startDate) > this.time()) {
+          // console.log(curr)
+          current.push(curr)
+          // this.samplecurr.pop()
+        }
+      }
+      this.proDev = Array.from(current)
+    }
   }
 }
 </script>

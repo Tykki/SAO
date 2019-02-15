@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <sample /> -->
+    <sample />
     <b-alert :show="dismissCountDownC"
              fade
              variant="success"
