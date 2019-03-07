@@ -7,7 +7,7 @@
         <hr v-if="proDev" />
         <h5 align="left" class="mt-3">{{event.description}}</h5>
         </b-col>
-        <b-col v-if="(email === event.created_by) & (!proDev)" class="" cols="0">
+        <b-col v-if="event.created_by === email" class="" cols="0">
           <b-btn variant="outline-secondary" @click="editEvent(event)"><icon :icon="['far', 'edit']" /></b-btn>
           <b-btn variant="outline-secondary" @click="openDelModal()"><icon :icon="['far', 'trash-alt']" /></b-btn>
         </b-col>

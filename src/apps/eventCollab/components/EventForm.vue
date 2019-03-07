@@ -105,9 +105,10 @@
             <b-form-group breakpoint="xl" 
                   label-size="sm"
                   label-cols="2"
-                  label="Theme:"
+                  label="Tags:"
                   label-for="theme"> <!-- make breakpoints for better use of horizontal view -->
               <!-- <b-form-input v-if="event" id="theme" v-model="event.theme" /> -->
+              <b-form-checkbox-group class="pb-3" v-model="formData.selectedOpts" :options="checkOpts"></b-form-checkbox-group>
               <b-form-input id="theme" v-model="formData.theme" />
             </b-form-group>
           </b-collapse>
@@ -129,14 +130,14 @@
           </b-col>
         </b-row>
 
-        <b-row>
+        <!-- <b-row>
           <b-col class="pt-3">
             <b-form-group class="pl-2" label="Does Your Event Include?">
               <b-form-checkbox-group v-model="formData.selectedOpts" :options="checkOpts">
               </b-form-checkbox-group>
             </b-form-group>
           </b-col>
-        </b-row>
+        </b-row> -->
 
         <b-row class="mt-5" align-h="center">
           <b-col cols="12" class="text-center">
@@ -144,14 +145,7 @@
             <occur-list @deleteReq="openDelOccurModal" @editReq="editOccur" :locations="eventInputs.locations" :occurrences="formData.occurrences" />
             <form-modal class="mt-3" ref="formModal" @addOccur="showOccur" :locations="eventInputs.locations"></form-modal>
           </b-col>
-        </b-row>
-        <b-row>
-          <b-col>
-
-          </b-col>
-        </b-row>
-
-        
+        </b-row>        
 
     </b-card>
     <b-row>
@@ -370,8 +364,8 @@ export default {
     },
     themeLabel () {
       if (this.Ctheme === true) {
-        return '- Remove Theme'
-      } else return '+ Add Theme'
+        return '- Remove Tags'
+      } else return '+ Add Tags'
     }
   },
   watch: {

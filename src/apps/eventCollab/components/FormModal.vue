@@ -32,7 +32,8 @@
                 label="Start:"
                 label-for="start">
             <!-- <b-form-input v-if="edit" id="start" :state="modalErrLog.state.start" v-model="modalData.strt" type="datetime-local" :required="modalData.required"/> -->
-            <b-form-input id="start" :value="defaultTime" :state="modalErrLog.state.start" v-model="modalData.startDate" type="datetime-local" :required="modalData.required"/>
+            <!-- <b-form-input id="start" :value="defaultTime" :state="modalErrLog.state.start" v-model="modalData.startDate" type="datetime-local" :required="modalData.required" /> -->
+            <date-picker id="start" v-model="modalData.startDate" :config="options" :required="modalData.required" :state="modalErrLog.state.start" />
           <b-form-invalid-feedback class="text-left">Please Enter a Start Date</b-form-invalid-feedback>
           </b-form-group>
         </b-col>
@@ -44,7 +45,8 @@
                 label="End:"
                 label-for="end">
             <!-- <b-form-input v-if="edit" id="end" :state="modalErrLog.state.end" v-model="modalData.fin" type="datetime-local" :required="modalData.required"/> -->
-            <b-form-input id="end" :value="defaultTime" :state="modalErrLog.state.end" v-model="modalData.endDate" type="datetime-local" :required="modalData.required"/>
+            <!-- <b-form-input id="end" :value="defaultTime" :state="modalErrLog.state.end" v-model="modalData.endDate" type="datetime-local" :required="modalData.required"/> -->
+            <date-picker id="end" v-model="modalData.endDate" :config="options" :state="modalErrLog.state.end" :required="modalData.required" />
           <b-form-invalid-feedback class="text-left">Please Enter an End Date</b-form-invalid-feedback>
           </b-form-group>
         </b-col>
@@ -85,7 +87,13 @@
         modalData: { required: true },
         occurrences: {},
         Cnote: false,
-        edit: false
+        edit: false,
+        options: {
+          format: 'lll',
+          useCurrent: true,
+          showClear: true,
+          showClose: true
+        }
       }
     },
     methods: {

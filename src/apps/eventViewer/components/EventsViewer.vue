@@ -143,8 +143,6 @@
 
 <script>
 
-// todo input mask date
-
 import { mapState } from 'vuex'
 import EventView from './EventView'
 import CollapseInput from './helpers/CollapseInput'

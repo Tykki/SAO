@@ -1,5 +1,5 @@
 <template>
-  <b-container  fluid id="">
+  <div id="">
       <upcoming-cards @modalReq="showModal" :upcoming="upcoming" :title="title" />
 
       <b-modal ok-only ok-title="Close" v-show="eventData" ref="eventModal">
@@ -10,7 +10,7 @@
         <post-view :post="postData" />
       </b-modal>
       
-  </b-container>
+  </div>
 </template>
 <script>
 // import { mapState } from 'vuex'

@@ -1,11 +1,12 @@
 <template>
-  <b-container fluid>
+  <div>
     <h4>{{title ? title : 'Article Cards'}}</h4>
+    
             <b-card v-for="(news, n) of UICnews.display" :key="n" class="shadow-sm" :class="{'shadow-lg': newsFocus === n}" @mouseover="newsFocus = n" @mouseout="newsFocus = null">
                 <news-view :news="news" />
             </b-card>
     
-  </b-container>
+  </div>
 </template>
 
 <script>
@@ -21,7 +22,14 @@ export default {
     }
   },
   methods: {
-    newsCards () {
+    initCards () {
+      if (this.news === true) {
+        this.getNews()
+      } else if (this.articles === true) {
+        return
+      }
+    },
+    getNews () {
       fetch('https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Ftoday.uic.edu%2Fnews-release%2Fnews-release%2Ffeed').then(res => res.json()).then(res => {
         this.$set(this.UICnews, 'display', res.items.slice(0, 5))
       })
@@ -31,7 +39,7 @@ export default {
     }
   },
   created () {
-    this.newsCards()
+    this.initCards()
   }
 }
 </script>

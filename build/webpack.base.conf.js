@@ -3,6 +3,7 @@ var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
 const webpack = require('webpack')
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -24,6 +25,14 @@ module.exports = {
       'jquery': 'jquery',
       'window.jQuery': 'jquery',
       'jQuery': 'jquery'
+    }),
+    new MomentLocalesPlugin(),
+    new webpack.ProvidePlugin({
+      Vue: ['vue/dist/vue.esm.js', 'default'],
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery',
+      $: 'jquery',
+      moment: 'moment',
     })
   ],
   output: {

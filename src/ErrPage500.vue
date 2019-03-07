@@ -1,7 +1,6 @@
 <template>
   <b-container id="display">
     <h3>Your Session has expired or has become invaild. Please wait as your session is refreshed.</h3>
-    <img src="./assets/error-taco.gif" alt="error-taco">
 </b-container>
 </template>
 

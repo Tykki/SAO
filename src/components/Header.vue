@@ -21,7 +21,7 @@
                     <icon icon="envelope" />
                 </b-link> -->
 
-                <b-link @click="authUser.notesUnseen = 0" @dblclick="notesForm" id="notes" class="">
+                <b-link @click="authUser.notesUnseen = 0" id="notes" class="">
                   <icon-layers >
                     <icon icon="bell"/>
                     <icon-layers-text v-show="authUser.notesUnseen > 0" class="fa-layers-top-right fa-layers-counter" transform="shrink-3 right-9 down-1" :value="authUser.notesUnseen" />
@@ -158,13 +158,12 @@ export default {
     //   return listed.slice(0, 6)
     // },
     displayNameHasSpace () {
-      if (screen.width > 784) {
+      if (screen.width > 787) {
         return true
       } else { false }
     }
   },
   methods: {
-    notesForm () { this.$router.push('notifications-form') },
     reqSearch (event) {
       this.resourceSearch = event.target.value
       console.log(this.resourceSearch)
@@ -205,7 +204,7 @@ export default {
   span{
     width: fit-content;
   }
-   #displayName{
+  #displayName{
     color: grey;
     font-weight: 600;
     margin: 0 12px 0 0;

@@ -6,7 +6,7 @@
     <b-row v-if="!truncate">
       <p class="mb-2 ml-3">{{post.description}}</p>
     </b-row>
-    <b-row>
+    <b-row v-if="truncate">
       <p class="mb-2 ml-3">{{post.description | truncate(200)}}</p>
     </b-row>
     <b-row>

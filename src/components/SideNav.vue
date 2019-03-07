@@ -22,7 +22,7 @@
             </b-nav-item>
 
             <b-nav-item ref="dashboard" to="/dashboard" @click="setNav('a', null)" :class="{active: navSet.active === `a`}" class="blink">
-                <icon icon="tachometer-alt" size="lg" class="nav-icon" /><strong>Dashboard</strong>
+              <icon icon="tachometer-alt" size="lg" class="nav-icon" /><strong>Dashboard</strong>
             </b-nav-item>
             
             <div v-for="(group, i) of resGroups" :key="`g${i}`">
@@ -216,6 +216,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+  nav{
+    display: block;
+  }
   h6{
     text-align: center;
     font-weight: bold;

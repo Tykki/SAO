@@ -86,9 +86,10 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
-  name: 'Notifications',
-  props: { authUser: Object },
+  name: 'NotificationsForm',
+  props: { },
   data () {
     return {
       title: 'Create Notification',
@@ -108,13 +109,14 @@ export default {
         // for (const pair of this.formData.entries()) {
         //   body[pair[0]] = pair[1]
         // }
-        fetch('https://websrvcs.sa.uic.edu/api/sao/announcements/', {method: 'post', body: JSON.stringify(this.formData), headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}`}}).then(res => console.log(res))
+        fetch('https://websrvcs.sa.uic.edu/api/sao/announcements/', {method: 'post', body: JSON.stringify(this.formData), headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}}).then(res => console.log(res))
         this.submitted = false
         this.formData = {}
       }
     }
   },
   computed: {
+    ...mapGetters(['token']),
     linkLabel () {
       if (this.noteLink === true) {
         return '- Remove Link'

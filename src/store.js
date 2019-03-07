@@ -11,6 +11,10 @@ export default new Vuex.Store({
   state: {
     authUser: { resourceGroups: [], notifications: [], notesDisplayed: [], notesUnseen: 0, notesPriority: [], token: null },
     formInputs: {
+      sortMeta: (state, keyName, items) => {
+        state.formInputs.event[keyName] = items
+          .map(item => { return {value: item.id, text: item.name} })
+      },
       event: {
         audiences: [],
         categories: [],
@@ -57,11 +61,25 @@ export default new Vuex.Store({
   },
   mutations: {
     SAVE_TOKEN (state, token) {
-      state.authUser.token = token
+      jwt.verify(token, pub, { algorithms: ['RS256'] }, (err, data) => {
+        if (err) {
+          if (err.name === 'TokenExpiredError') {
+            localStorage.removeItem('token')
+          }
+          if (err.name === 'JsonWebTokenError') {
+            localStorage.removeItem('token')
+          }
+          return router.replace('500')
+        } else {
+          state.authUser = Object.assign({}, data, {resourceGroups: [], notifications: [], notesDisplayed: [], notesUnseen: 0, notesPriority: [], token: token})
+        }
+      })
     },
     KILL_TOKEN (state) {
       state.authUser.token = null
-      console.log(state.authUser.token)
+      localStorage.removeItem('token')
+      window.location.href = 'https://websrvcs.sa.uic.edu/api/sao/auth/logout'
+      this.$router.push('Logout')
     },
     BUILD_USER (state) {
       fetch(`https://websrvcs.sa.uic.edu/api/sao/announcements/?since=2018-08-08&token=${state.authUser.token}`).then(res => res.json()).then((data) => {
@@ -75,68 +93,16 @@ export default new Vuex.Store({
           state.authUser.notesPriority = data.slice(0, 4).reverse()
         })
 
-      // fetch(`./static/JWT_SIGNING_KEY.pub`).then(res => console.log(res.json()))
-      // fetch('https://randomuser.me/api/').then((res) => res.json()).then((data) =>
-      //   $.each(data, (i, v) => {
-      //     // console.log(i, v)
-      //     if (i === 'results') {
-      //       // console.log(v[0].picture.thumbnail)
-      //       state.authUser.avi = v[0].picture.thumbnail
-      //       $('#avatar').attr('src', state.authUser.avi)
-      //       $('#avatar').show()
-      //     }
-      //   }
-      //   ))
-      // const test = jwt.decode(state.authUser.token, {complete: true})
-      // console.log(test.payload)
-      jwt.verify(state.authUser.token, pub, { algorithms: ['RS256'] }, (err, data) => {
-        if (err) {
-          // console.log('Aww Snap Son! =[')
-          console.error(err)
-          if (err.name === 'TokenExpiredError') {
-            localStorage.removeItem('token')
-            console.log(localStorage.getItem('token'))
-          }
-          if (err.name === 'JsonWebTokenError') {
-            localStorage.removeItem('token')
-            console.log(localStorage.getItem('token'))
-            console.log(router)
-          }
-          return router.replace('500')
-        }
-        $.each(data, (i, v) => {
-          // console.log(data)
-          if (i === 'givenName') {
-            state.authUser.givenName = v
-          }
-          if (i === 'surname') {
-            state.authUser.surname = v
-          }
-          if (i === 'email') {
-            state.authUser.email = v
-          }
-          if (i === 'uin') {
-            state.authUser.uin = v
-          }
-          if (i === 'displayName') {
-            state.authUser.displayName = v
-          }
-          if (i === 'email') {
-            state.authUser.email = v
-          }
-          if (i === 'groups') {
-            state.authUser.groups = v
-          }
-          if (i === 'netid') {
-            state.authUser.netid = v
+      fetch(`https://websrvcs.sa.uic.edu/api/sao/user/${state.authUser.netid}`, { headers: { 'Authorization': 'supersecret' } }).then(res => res.json()).then(data => {
+        Object.keys(data).forEach(i => {
+          if (i === 'resourceGroups') {
+            state.authUser.resourceGroups = data[i]
           }
         })
-      })
-      fetch(`https://websrvcs.sa.uic.edu/api/sao/user/${state.authUser.netid}`, { headers: { 'Authorization': 'supersecret' } }).then(res => res.json()).then(data => {
-        $.each(data, (i, v) => {
-          // console.log(i, v)
-          if (i === 'resourceGroups') {
-            state.authUser.resourceGroups = v
+        // (data, (i, v) => {
+        //   // console.log(i, v)
+        //   if (i === 'resourceGroups') {
+        //     state.authUser.resourceGroups = v
             // When the resource Groups are found, delete the placeholders due to having content now.
             // $('#rGroup').remove()
             // $('#ResourseGroup').remove()
@@ -158,41 +124,14 @@ export default new Vuex.Store({
             //     t++
             //   }
             // }
-          }
-        })
       })
     },
     FORM_INFO (state) {
       fetch(`https://websrvcs.sa.uic.edu/api/sao/events/metadata/?token=${state.authUser.token}`).then(function (res) {
         return res.json()
       }).then(data => {
-        $.each(data, (i, v) => {
-          // console.log(i, v)
-          if (i === 'audiences') {
-            for (let item of v) {
-              state.formInputs.event.audiences.push({ value: item.id, text: item.name })
-            }
-          }
-          if (i === 'categories') {
-            for (let item of v) {
-              state.formInputs.event.categories.push({ value: item.id, text: item.name })
-            }
-          }
-          if (i === 'departments') {
-            for (let item of v) {
-              state.formInputs.event.departments.push({ value: item.id, text: item.name })
-            }
-          }
-          if (i === 'status') {
-            for (let item of v) {
-              state.formInputs.event.status.push({ value: item.id, text: item.name })
-            }
-          }
-          if (i === 'locations') {
-            for (let item of v) {
-              state.formInputs.event.locations.push({ value: item.id, text: item.name })
-            }
-          }
+        Object.keys(data).forEach(i => {
+          state.formInputs.sortMeta(state, i, data[i])
         })
       })
     },
