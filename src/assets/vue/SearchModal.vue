@@ -18,7 +18,7 @@
       </b-form-group>
 
       <b-list-group>
-        <b-list-group-item v-for="(res, i) of results" :key="i" :href="res.url ? res.url : '#'" target="_blank"><icon v-if="res.icon" :icon="res.icon" /> {{res.name}}</b-list-group-item>
+        <b-list-group-item v-for="(res, i) of results" :key="i" :href="res.url ? res.url : '#'" target="_blank"><icon v-if="res.icon" :icon="res.icon" class="mr-2" /> {{res.name}}</b-list-group-item>
       </b-list-group>
 
   </b-modal>
@@ -43,10 +43,6 @@
       },
       search () {
         return this.results
-        // console.log(this.resources.filter(x => (x.name.toLowerCase().includes(this.queryData.toLowerCase()))))
-        // this.results = this.resources.filter(x => {
-        //   return x.name.toLowerCase().includes(this.queryData.toLowerCase())
-        // })
       }
     },
     computed: {
@@ -54,28 +50,18 @@
         if (this.queryData === '') {
           return []
         }
-        // console.log(this.resources.filter(x => (x.name.toLowerCase().includes(this.queryData.toLowerCase()))))
-        // let topLvl = this.resources.filter((x, i) => {
-        //   return x.name.toLowerCase().includes(this.queryData.toLowerCase())
-        // })
 
         let subLvl = []
         _.find(this.resources, (res) => {
           _.find(res.resources, (item) => {
             if (item.name.toLowerCase().includes(this.queryData.toLowerCase())) {
+              item.icon = res.icon
               subLvl.push(item)
             }
           })
         })
-        // let subLvl = this.resources.filter((x, i) => {
-        //   return x.resources.filter(x => x.name.toLowerCase().includes(this.queryData.toLowerCase()))
-        // })
         let test3 = [...subLvl]
         return test3
-        // x.resources.filter(x => x.name.toLowerCase().includes(this.queryData.toLowerCase()))
-        // return this.resources.filter((x, i) => {
-        //   return x.name.toLowerCase().includes(this.queryData.toLowerCase()) && x.resources.filter(x => x.name.toLowerCase().includes(this.queryData.toLowerCase()))
-        // })
       }
     },
     watch: {

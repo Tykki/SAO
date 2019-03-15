@@ -7,61 +7,58 @@
         </section>
         <section>
             <img id="brand-logo" src="./../assets/sa_small.png" alt="UIC Student Affairs w/ Circle Logo">
-                <!-- <br>
-                <strong>Department: </strong><label id="dName">N/A</label> -->
         </section>
     </div>
     
     <icon icon="bars" size="2x" class="toggle-btn" data-toggle="collapse" data-target="#menu-content" />
     <div class="menu-list">
         <ul id="menu-content" @click="iconNavClose" class="menu-content collapse out">
-            <b-nav-item  class="navTitle">
+            <b-nav-item class="navTitle">
                 <small>
                   <strong>Navagations</strong>
                 </small>
             </b-nav-item>
 
-            <b-nav-item ref="dashboard" to="/dashboard" @click="setNav('a', null)" :class="{active: navSet.active === `a`}" class="blink">
+            <b-nav-item ref="dashboard" to="/dashboard" @click="setNav('a')" :class="{active: navSet.active === `a`}" class="blink">
               <icon icon="tachometer-alt" size="lg" class="nav-icon" /><strong>Dashboard</strong>
             </b-nav-item>
-            
-            <div v-for="(group, i) of resGroups" :key="`g${i}`">
-              <b-nav-item @click="setNav(null, null)" :class="{active: navSet.parent === `${i}`}" :id="`rG${i}`" data-toggle="collapse" :data-target="`#gR${i}`" class="collapsed">
-                  <icon :icon="group.icon" size="lg" class="nav-icon" /><strong :id="`rName${i}`">{{group.name}}<icon icon="angle-down" size="lg" class="arrow-down" /></strong>
-              </b-nav-item>
 
-              <ul class="sub-menu collapse" :id="`gR${i}`">
-                  <b-nav-item v-for="(resource, r) of group.resources" :key="r" @click="setNav(`${i}-${r}`, `${i}`, $event)" :href="resource.isExternal ? resource.url : '#'" class="" :class="{active: navSet.active === `${i}-${r}`}" target="_blank" ><icon icon="angle-right" style="font-weight: 900;" transform="right-12" /><strong :id="`rLink${i}`" style="margin-left: 15px;">{{resource.name}}</strong></b-nav-item>
-              </ul>
-            </div>
+              <div class="" role="resource-group" v-for="(group, i) of resGroups" :key="i">
+                <b-nav-item v-b-toggle="`accordion${i}`" class="nav-item" role="nav-item" :class="{active: navSet.active === i}">
+                    <icon :icon="group.icon" size="lg" class="nav-icon" /><strong>{{group.name}}<icon icon="angle-down" size="lg" class="arrow-down" /></strong>
+                </b-nav-item>
 
-            
-            <hr/>
+                <b-collapse tag="ul" class="sub-menu" :id="`accordion${i}`" accordion="resources" role="sub-nav">
+                  <b-nav-item v-for="(resource, r) of group.resources" :key="r" class="nav-item" :class="{active: navSet.subLvl === `${i}-${r}`}" @click="setNav(i, r)" :href="resource.isExternal ? resource.url : '#'" target="_blank">
+                      <icon icon="angle-right" style="font-weight: 900;" transform="right-12" /><strong class="ml-3">{{resource.name}}</strong>
+                  </b-nav-item>
+                </b-collapse>
+              </div>
+
+            <hr />
+
             <b-nav-item  class="navTitle">
                 <small>
                   <strong>Apps</strong>
                 </small>
             </b-nav-item>
 
-            <b-nav-item ref="events" to="/viewer" @click="setNav('b', null)" :class="{active: navSet.active === `b`}" class="blink">
+            <b-nav-item ref="events" to="/viewer" @click="setNav('b')" :class="{active: navSet.active === `b`}" class="blink">
               <icon icon="calendar-alt" size="lg" class="nav-icon" /><strong>Events Viewer</strong>
             </b-nav-item>
             
 
-            <b-nav-item ref="posts" to="/notifications-form" @click="setNav('c', null)" :class="{active: navSet.active === `c`}" class="blink">
+            <b-nav-item ref="posts" to="/notifications-form" @click="setNav('c')" :class="{active: navSet.active === `c`}" class="blink">
               <icon icon="comment" size="lg" class="nav-icon" /><strong>Posts</strong>
             </b-nav-item>
             
             <hr/>
             
-            <b-nav-item to="/Logout" @click="setNav('z', null), logoutReq()" :class="{active: navSet.active === `z`}" class="blink">
+            <b-nav-item to="/Logout" @click="setNav('z'), logoutReq()" :class="{active: navSet.active === `z`}" class="blink">
                     <icon icon="power-off" size="lg" class="nav-icon" /><strong>Logout</strong>
             </b-nav-item>
         </ul>
     </div>
-    <!-- <b-row class="footer">
-      <b-col class="align-items-end">© 2018 The Board of Trustees of the University of Illinois | <a href="https://www.vpaa.uillinois.edu/resources/web_privacy">Privacy Statement</a></b-col>
-    </b-row> -->
   </b-nav>
 </template>
 
@@ -69,10 +66,9 @@
 import { mapGetters } from 'vuex'
 export default {
   name: 'sideNav',
-  // props: ['resources'],
   data () {
     return {
-      navSet: {active: 'a', parent: null}
+      navSet: {active: 'a', subLvl: null}
     }
   },
   created () {
@@ -81,39 +77,29 @@ export default {
     logoutReq () {
       this.$emit('logout')
     },
-    setNav (data, i, event) {
-      // console.log(data, i, this)
-      if (i === null) {
+    setNav (id, sub = null, $event) {
+      console.log(event)
+      if (sub === null) {
         let subM = $('.sub-menu')
         subM.collapse('hide')
       }
-      if (data === null) {
+      if (id === null) {
         return
       }
-      // console.log(this, data, i, event)
-      this.navSet.active = data
-      this.navSet.parent = i
-      if (data === 'a') {
+      this.navSet.active = id
+      this.navSet.subLvl = `${id}-${sub}`
+      if (id === 'a') {
         this.$refs.dashboard.children[0].click()
       }
-      if (data === 'b') {
+      if (id === 'b') {
         this.$refs.events.children[0].click()
       }
-      if (data === 'c') {
+      if (id === 'c') {
         this.$refs.posts.children[0].click()
       }
-      if (i !== null) {
+      if (sub !== null) {
         event.toElement.firstChild.click()
       }
-      // console.log(this)
-      // if (typeof data === 'string') {
-      //   console.log(data)
-      //   if (data.match(/^[A-Za-z]+$/)) {
-      //     let ix = data.charCodeAt() - 97
-      //     console.log(ix)
-      //     this.$children[ix].$el.click()
-      //   }
-      // }
     },
     iconNavShow (data) {
       // console.log(this, data)

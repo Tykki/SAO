@@ -26,7 +26,7 @@ export default {
   },
   beforeCreate () {
     let token = window.location.hash.split('=')[1]
-    localStorage.getItem('token') ? null : (token ? localStorage.setItem('token', token) : window.location.href = 'https://websrvcs.sa.uic.edu/api/sao/auth')
+    localStorage.getItem('token') ? null : (token ? localStorage.setItem('token', token) : window.location.href = 'https://websrvcs.sa.uic.edu/api/sao/auth?request-uri=localhost:8080')
     // token ? (localStorage.getItem('token') ? null : localStorage.setItem('token', token)) :
     // if (token === null || token === undefined) {
     //   if (localStorage.getItem('token') === undefined || localStorage.getItem('token') === null || localStorage.getItem('token') === '') {
@@ -46,8 +46,6 @@ export default {
   mounted () {
     this.initWebSocket()
   },
-  watch: {
-  },
   computed: {
     ...mapGetters(['token'])
   },
@@ -55,7 +53,7 @@ export default {
     ...mapActions(['newNote', 'buildUser', 'formInfo']),
     initWebSocket () {
       const sudo = this
-      const socket = new WebSocket(`wss://websrvcs.sa.uic.edu/api/sao/announcements/ws/?since=2018-08-08&token=${this.token}`)
+      const socket = new WebSocket(`wss://websrvcs.sa.uic.edu/api/sao/posts/announcements/realtime/?since=2018-08-08&token=${this.token}`)
       // Connection error
       socket.addEventListener('error', function (event) {
         console.log('Error from server ', event)
@@ -78,10 +76,7 @@ export default {
         }
       })
     },
-    // time () { return moment },
     reqLogout () {
-      // this.authUser.token = null
-      console.log(this)
       this.$store.commit('KILL_TOKEN')
     }
   },

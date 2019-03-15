@@ -1,6 +1,7 @@
 <template>
-  <b-container id="">
-    <h3>Your Session has expired or has become invaild. Please wait as your session is refreshed.</h3>
+  <b-container class="text-center" id="">
+    <h3 class="mt-2">Your Session has expired or has become invaild. Please click the button below to have your session refreshed.</h3>
+    <b-btn class="mt-3" @click="handleError">Refresh Session</b-btn>
 </b-container>
 </template>
 
@@ -12,11 +13,11 @@ export default {
     }
   },
   mounted () {
-    this.handleError()
+    // this.handleError()
   },
   methods: {
     handleError () {
-      setTimeout(() => { localStorage.removeItem('token'); window.location.href = 'https://websrvcs.sa.uic.edu/api/sao/auth' }, 3000)
+      localStorage.removeItem('token'); window.location.href = 'https://websrvcs.sa.uic.edu/api/sao/auth'
     }
   }
 }

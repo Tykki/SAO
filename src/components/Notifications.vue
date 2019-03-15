@@ -11,33 +11,24 @@
             <post-view :post="note" />
           </b-modal>
         </b-col>
-        <!-- <b-col cols="12" sm="6">
-            <b-card title="Card Title" title-tag="h3">
-                <p class="card-text">
-                    <p class="card-text"> {{group}}</p>
-                </p>
-            </b-card>
-        </b-col> -->
     </b-row>
   </b-container>
 </template>
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-// import UpcomingModal from '@/assets/vue/UpcomingModal'
 import PostView from '@/assets/vue/PostView'
 export default {
   name: 'Notifications',
   components: { PostView },
   data () {
     return {
-      hoverFocus: console.log(this),
+      hoverFocus: null,
       title: 'Notifications'
     }
   },
   methods: {
     showModal (i) {
-      // console.log(this.$refs)
       this.$refs[`postModal${i}`][0].show()
     }
   },

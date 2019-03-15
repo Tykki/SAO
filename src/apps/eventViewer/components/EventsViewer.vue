@@ -347,10 +347,15 @@ export default {
         })
       this.selectedAudiences = Array.from(this.audiences)
 
+      this.tic = this.events
+        .map(e => e.ticketed)
+        .filter((val, index, self) => {
+          return self.indexOf(val) === index
+        })
+      this.tracker = Array.from(this.tic)
+      console.log(this.tracker)
+
       this.events.forEach(event => {
-        event['color'] = `rgb(${Math.floor(Math.random() * 256)} ,${Math.floor(
-          Math.random() * 256
-        )}, ${Math.floor(Math.random() * 256)})`
         if (event.occurrences.length !== 0) {
           event['startRange'] = new Date(event.occurrences.reduce((acc, curr) => {
             let a = new Date(acc.startDate)

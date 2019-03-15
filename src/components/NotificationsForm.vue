@@ -28,7 +28,7 @@
                       label-cols="1"
                       label="Audience:"
                       label-for="audience"> <!-- make breakpoints for better use of horizontal view -->
-              <b-form-select required id="audience" v-model="formData.audience" :options="['Staff', 'Students']" />
+              <b-form-select required id="audience" v-model="formData.audience" :options="eventInputs.audiences" />
             <b-form-invalid-feedback>Please Select an Audience</b-form-invalid-feedback>
             </b-form-group>
           </b-col>
@@ -104,11 +104,7 @@ export default {
     createNote () {
       this.submitted = true
       console.log(this.formData, this.noteForm().checkValidity())
-      if (this.noteForm().checkValidity() === true) {
-        // const body = {}
-        // for (const pair of this.formData.entries()) {
-        //   body[pair[0]] = pair[1]
-        // }
+      if (this.noteForm().checkValidity()) {
         fetch('https://websrvcs.sa.uic.edu/api/sao/announcements/', {method: 'post', body: JSON.stringify(this.formData), headers: {'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${this.token}`}}).then(res => console.log(res))
         this.submitted = false
         this.formData = {}
@@ -116,11 +112,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['token']),
+    ...mapGetters(['token', 'eventInputs']),
     linkLabel () {
-      if (this.noteLink === true) {
-        return '- Remove Link'
-      } else return '+ Add a Link'
+      return this.noteLink ? '- Remove Link' : '+ Add a Link'
     }
   }
 }

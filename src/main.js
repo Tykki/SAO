@@ -4,7 +4,6 @@ import Vue from 'vue'
 import store from './store'
 import BootstrapVue from 'bootstrap-vue'
 import App from './App'
-import err500 from './ErrPage500'
 import router from './router'
 // import 'bootstrap/dist/css/bootstrap.min.css'
 import $ from 'jquery'
@@ -79,11 +78,10 @@ $(function () {
 //   // $('#display').width('calc(100% - 300px)');
 // })
 
-/* eslint-disable */
 window.myApp = new Vue({
   el: '#app',
   router,
   store,
   template: '<App />',
-  components: { App, err500 }
+  components: { App }
 })

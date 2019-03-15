@@ -4,12 +4,6 @@
             <b-col cols="6">
               <p class="text-left">© {{new Date().getFullYear()}} The Board of Trustees of the University of Illinois | <b-link target="_blank"class="text-prime2" href="https://www.vpaa.uillinois.edu/resources/web_privacy">Privacy Statement</b-link></p>
             </b-col>
-            <!-- <b-col>
-              <b-btn variant="danger" to="/old-form">Old Form</b-btn>
-              <b-btn variant="primary" to="/">Home</b-btn>
-              <b-btn variant="warning" to="/Viewer">View</b-btn>
-              <b-btn variant="success" to="/new-form">New Form</b-btn>
-            </b-col> -->
         </b-row>
     </b-container>
 </template>

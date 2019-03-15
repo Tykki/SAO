@@ -6,7 +6,7 @@
 
         <b-col lg="8">
 
-          <pro-dev title="Professional Development" :data="proDev" />
+          <pro-dev title="Professional Development" proDev />
 
           <uic-news title="UIC News" news />
 
@@ -43,10 +43,10 @@ import { mapState } from 'vuex'
 import EventView from '@/apps/eventViewer/components/EventView'
 import ImportantPosts from '@/assets/vue/UpcomingModal'
 import ProDev from '@/assets/vue/AccordionCard'
-import ArticleCards from '@/assets/vue/ArticleCards'
+import UicNews from '@/assets/vue/ArticleCards'
 export default {
   name: 'Dashboard',
-  components: { EventView, ImportantPosts, ProDev, 'uic-news': ArticleCards },
+  components: { EventView, ImportantPosts, ProDev, UicNews },
   data () {
     return {
       title: 'Welcome,',
@@ -54,38 +54,15 @@ export default {
         {name: 'facebook-f', text: 'UIC Life on Facebook', color: 'fbBlue', link: 'https://www.facebook.com/UIClife/'},
         {name: 'twitter', text: 'UIC Life on Twitter', color: 'twBlue', link: 'https://twitter.com/uiclife?lang=en'},
         {name: 'youtube-square', text: 'UIC Life on YouTube', color: 'ytRed', link: 'https://www.youtube.com/user/UIClife'}
-      ],
-      proDev: []
+      ]
     }
   },
   created () {
-    fetch(`https://websrvcs.sa.uic.edu/api/sao/events/?token=${this.authUser.token}&category=16`).then(res => res.json()).then(res => {
-      res.reverse()
-      $.each(res, (i, v) => {
-        if (this.proDev.length < 3) {
-          this.proDev.push(v)
-        }
-        // this.$set(this.proDev, `event${[i]}`, v)
-      })
-      this.dateCheck()
-    })
-    // fetch(`https://websrvcs.sa.uic.edu/api/sao/announcements/?since=2018-08-08&priority=1&token=${this.authUser.token}`).then(res => res.json()).then((data) => { this.$set(this.priorityNotes, 'display', data.slice(0, 4).reverse()); console.log(data) })
   },
   computed: {
     ...mapState(['authUser', 'time'])
   },
   methods: {
-    dateCheck () {
-      let current = []
-      for (let curr of this.proDev) {
-        if (this.time(curr.occurrences[0].startDate) > this.time()) {
-          // console.log(curr)
-          current.push(curr)
-          // this.samplecurr.pop()
-        }
-      }
-      this.proDev = Array.from(current)
-    }
   }
 }
 </script>

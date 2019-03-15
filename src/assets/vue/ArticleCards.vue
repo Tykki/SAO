@@ -14,6 +14,7 @@ import NewsView from '@/assets/vue/NewsView'
 export default {
   props: {title: String, articles: Boolean, news: Boolean},
   components: {NewsView},
+  name: 'ArticleCards',
   data () {
     return {
       newsFocus: null,

@@ -1,15 +1,12 @@
 <template>
   <b-container fluid>
-    <h4>{{title ? title : 'Article Cards'}}</h4>
-            <b-card v-for="(news, n) of UICnews.display" :key="n" class="shadow-sm" :class="{'shadow-lg': newsFocus === n}" @mouseover="newsFocus = n" @mouseout="newsFocus = null">
-                <news-view :news="news" />
-            </b-card>
+    <news-view />
     
   </b-container>
 </template>
 
 <script>
-import NewsView from '@/assets/vue/NewsView'
+import NewsView from '@/assets/vue/AccordionCard'
 export default {
   props: {title: String, articles: Boolean, news: Boolean},
   components: {NewsView},

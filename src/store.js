@@ -82,13 +82,13 @@ export default new Vuex.Store({
       this.$router.push('Logout')
     },
     BUILD_USER (state) {
-      fetch(`https://websrvcs.sa.uic.edu/api/sao/announcements/?since=2018-08-08&token=${state.authUser.token}`).then(res => res.json()).then((data) => {
+      fetch(`https://websrvcs.sa.uic.edu/api/sao/posts/announcements/?since=2018-08-08&token=${state.authUser.token}`).then(res => res.json()).then((data) => {
         state.authUser.notifications = data
         state.authUser.notesDisplayed = data.slice(0, 6)
         state.authUser.notesUnseen = 0
       })
 
-      fetch(`https://websrvcs.sa.uic.edu/api/sao/announcements/?since=2018-08-08&priority=1&token=${state.authUser.token}`).then(res => res.json())
+      fetch(`https://websrvcs.sa.uic.edu/api/sao/posts/announcements/?since=2018-08-08&priority=1&token=${state.authUser.token}`).then(res => res.json())
         .then((data) => {
           state.authUser.notesPriority = data.slice(0, 4).reverse()
         })
